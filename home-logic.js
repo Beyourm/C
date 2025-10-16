@@ -5,7 +5,9 @@
 // 🛑 تم تحديث الرابط بناءً على طلبك
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbYeuziWHe6ODINemry6n3XNfXTpDrZ2jxo1GXG9bAjm6AAhiCyogt3p1Y48qvJ1kppQ/exec'; 
 const BASE_REGISTRATION_URL = 'https://skillia.netlify.app/courses.html'; 
+const LOCAL_MARKETER_KEY = 'stored_marketer_id'; // مفتاح LocalStorage المستخدم في marketer_tracker.js
 
+// عناصر الـ DOM
 const statusMessage = document.getElementById('statusMessage');
 const dashboardContent = document.getElementById('dashboardContent');
 const marketerIdDisplay = document.getElementById('marketer-id-display');
@@ -14,17 +16,20 @@ const activeReferralsCount = document.getElementById('active-referrals-count');
 const referralLinkText = document.getElementById('referral-link-text');
 const copyBtn = document.getElementById('copy-btn');
 const downloadBtn = document.getElementById('download-btn');
-const referralsTableContainer = document.getElementById('referrals-table-container'); // أصبح حاوية البطاقات
-const urlParams = new URLSearchParams(window.location.search);
+const referralsTableContainer = document.getElementById('referrals-table-container'); 
 const searchInput = document.getElementById('searchInput');
 const toastNotification = document.getElementById('toastNotification'); 
 
 let currentReferralsList = []; 
 let toastTimeout; 
 
-const marketerId = urlParams.get('marketer_id'); 
+// --- استخلاص المعرّف ---
+const urlParams = new URLSearchParams(window.location.search);
+// 💡 الأولوية لمعرّف الرابط، ثم المعرّف المخزّن بواسطة marketer_tracker.js
+const marketerId = urlParams.get('marketer_id') || localStorage.getItem(LOCAL_MARKETER_KEY); 
+// -----------------------
 
-// الأعمدة التي نحتاجها لعرض البطاقة
+// الأعمدة التي نحتاجها لتنزيل CSV
 const referralColumns = ['تاريخ_التسجيل', 'fullname', 'phone', 'email', 'الحالة'];
 const referralHeaders = ['التاريخ', 'اسم المسجّل', 'الهاتف', 'البريد الإلكتروني', 'حالة التسجيل'];
 
@@ -50,6 +55,7 @@ function updateStatus(message, type = 'loading') {
         dashboardContent.style.display = 'none';
     } else {
         statusMessage.innerHTML = message;
+        dashboardContent.style.display = 'none'; // إخفاء المحتوى عند ظهور رسالة خطأ/نجاح ثابتة
     }
 }
 
@@ -123,7 +129,8 @@ function buildReferralsCards(referrals) {
         
         let detailsHtml = cardFields.map(field => {
             const value = referral[field.key] || '---';
-            const direction = field.key === 'phone' || field.key === 'email' ? 'ltr' : 'rtl';
+            // تحديد اتجاه النص لليمين لـ phone و email
+            const direction = field.key === 'phone' || field.key === 'email' ? 'ltr' : 'rtl'; 
             
             return `
                 <p>
@@ -152,7 +159,6 @@ function buildReferralsCards(referrals) {
 
 /**
  * دالة فلترة / بحث البطاقات.
- * (المنطق هو نفسه، فقط نستخدم دالة buildReferralsCards)
  */
 function filterReferrals() {
     const q = searchInput.value.toLowerCase();
@@ -201,9 +207,10 @@ function downloadCSV(data, marketerId) {
 function displayData(data) {
     dashboardContent.style.display = 'block';
     
+    // إخفاء رسالة الحالة بعد النجاح لفترة قصيرة
     const updateTime = new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' });
     updateStatus(`<i class="fas fa-check-circle"></i> تم التحديث بنجاح ✅ <span style="font-size:14px; margin-right: 15px;">| 📅 آخر تحديث: ${updateTime}</span>`, 'success');
-    setTimeout(() => { statusMessage.style.display = 'none'; }, 2000); 
+    setTimeout(() => { statusMessage.style.display = 'none'; dashboardContent.style.display = 'block'; }, 2000); 
 
     currentReferralsList = data.referrals_list || [];
 
@@ -212,6 +219,7 @@ function displayData(data) {
 
     updateMetaTags(data);
     
+    // عرض الاسم والمعرف
     if (data.personal_data && data.personal_data.length > 0) {
         const marketerName = data.personal_data[0].fullname || 'غير معروف';
         document.querySelector('header h1').innerHTML = `لوحة تحكم المسوِّق – ${marketerName}`;
@@ -234,7 +242,13 @@ function displayData(data) {
 async function fetchData(marketerId) {
     updateStatus('جارٍ جلب البيانات...'); 
     
-    const fetchUrl = `${APPS_SCRIPT_URL}?marketerId=${marketerId}`;
+    // التأكد من أن المعرّف موجود وصالح
+    if (!marketerId || marketerId.length < 3) { 
+        updateStatus('⚠️ المعرّف غير صالح. الرجاء التأكد من المعرف في الرابط.', 'error');
+        return;
+    }
+
+    const fetchUrl = `${APPS_SCRIPT_URL}?marketerId=${marketerId.toUpperCase()}`; // تحويل المعرف لحروف كبيرة احتياطاً
 
     try {
         const response = await fetch(fetchUrl);
@@ -258,14 +272,15 @@ async function fetchData(marketerId) {
 // ----------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-    // إتاحة الدوال للوصول إليها عبر HTML (مثل oninput="filterReferrals()")
+    // إتاحة الدوال للوصول إليها عبر HTML 
     window.filterReferrals = filterReferrals;
+    window.downloadCSV = downloadCSV;
 
     if (marketerId) {
         fetchData(marketerId.toUpperCase());
     } else {
         updateStatus('⚠️ لا يوجد معرف مسوِّق في الرابط. الرجاء استخدام رابط يحتوي على: ?marketer_id=XXXXXX', 'error');
-        marketerIdDisplay.innerHTML = `الرجاء إضافة المعرّف في الرابط.`;
+        marketerIdDisplay.innerHTML = `الرجاء إضافة المعرّف في الرابط أو تسجيل الدخول أولاً.`;
     }
     
     copyBtn.addEventListener('click', async () => {
