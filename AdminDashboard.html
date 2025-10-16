@@ -63,7 +63,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -115,30 +115,30 @@
         }
 
         /* --- Table Styling --- */
-        #marketers-table-container {
+        #marketers-table-container, #tickets-table-container {
             overflow-x: auto;
             margin-top: 20px;
         }
-        .marketers-table {
+        .marketers-table, .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
-        .marketers-table th, .marketers-table td {
+        .marketers-table th, .marketers-table td, .data-table th, .data-table td {
             border: 1px solid #e0e0e0;
             padding: 12px;
             text-align: right;
             vertical-align: middle;
         }
-        .marketers-table th {
+        .marketers-table th, .data-table th {
             background-color: #e3f2fd;
             color: #1e88e5;
             font-weight: bold;
         }
-        .marketers-table tr:nth-child(even) {
+        .marketers-table tr:nth-child(even), .data-table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        .marketers-table button {
+        .marketers-table button, .data-table button {
             padding: 6px 10px;
             border-radius: 6px;
             cursor: pointer;
@@ -154,6 +154,8 @@
         .btn-bonus:hover { background-color: #fb8c00; }
         .btn-unlock { background-color: #00bcd4; color: white; border: 1px solid #00bcd4; }
         .btn-unlock:hover { background-color: #00acc1; }
+        .btn-process { background-color: #8bc34a; color: white; border: 1px solid #8bc34a; }
+        .btn-process:hover { background-color: #7cb342; }
 
         /* --- General Forms --- */
         .admin-form {
@@ -164,6 +166,10 @@
             padding: 20px;
             border-radius: 8px;
             border: 1px solid #eee;
+            margin-bottom: 30px;
+        }
+        .admin-form .full-width {
+            grid-column: 1 / 3;
         }
         .admin-form button {
             grid-column: 1 / 3;
@@ -194,10 +200,10 @@
         }
         .modal-content {
             background-color: #fefefe;
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 30px;
             border: 1px solid #888;
-            width: 50%;
+            width: 60%;
             min-width: 400px;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -243,7 +249,7 @@
 <body>
 
     <div class="container">
-        <h1>لوحة تحكم مدير المسوّقين</h1>
+        <h1>لوحة تحكم مدير المسوّقين الشاملة</h1>
 
         <div id="login-section">
             <div class="form-group">
@@ -256,26 +262,49 @@
 
         <div id="dashboard-section" class="hidden">
             <div class="header-section">
-                <h2>إدارة المسوّقين</h2>
+                <h2>إدارة النظام</h2>
                 <button onclick="handleLogout()">تسجيل الخروج</button>
             </div>
 
             <div class="tabs">
                 <button class="tab-button active" data-tab="marketers" onclick="switchTab('marketers')">المسوّقون</button>
-                <button class="tab-button" data-tab="actions" onclick="switchTab('actions')">الإجراءات الإدارية</button>
+                <button class="tab-button" data-tab="tickets" onclick="switchTab('tickets')">تذاكر الدعم</button>
+                <button class="tab-button" data-tab="actions" onclick="switchTab('actions')">الإجراءات الجماعية</button>
+                <button class="tab-button" data-tab="reports-settings" onclick="switchTab('reports-settings')">الإعدادات والتقارير</button>
                 <button class="tab-button" data-tab="structure" onclick="switchTab('structure')">هيكلة البيانات</button>
             </div>
 
             <div id="marketers-content" class="tab-content">
                 <button class="login-btn" style="width: auto; margin-bottom: 15px; background-color: #1e88e5;" onclick="loadMarketers()">تحديث قائمة المسوّقين</button>
                 <div id="marketers-table-container">
-                    <div id="loading-message" class="alert alert-info">جاري تحميل البيانات...</div>
+                    <div id="loading-message" class="alert alert-info">جاري تحميل بيانات المسوّقين...</div>
                     <table class="marketers-table hidden" id="marketers-table"></table>
                 </div>
             </div>
+            
+            <div id="tickets-content" class="tab-content hidden">
+                 <button class="login-btn" style="width: auto; margin-bottom: 15px; background-color: #00bcd4;" onclick="loadTickets()">تحديث تذاكر الدعم</button>
+                 <div id="tickets-table-container">
+                    <div id="tickets-loading-message" class="alert alert-info">جاري تحميل تذاكر الدعم...</div>
+                    <table class="data-table hidden" id="tickets-table"></table>
+                 </div>
+            </div>
 
             <div id="actions-content" class="tab-content hidden">
-                <h3>1. منح مكافأة (Grant Bonus)</h3>
+                <h3>1. تحديث نقاط مسوّق معين (Update Points)</h3>
+                <form class="admin-form" onsubmit="handleUpdatePoints(event)">
+                    <div class="form-group">
+                        <label for="points-id">هوية المسوّق (Marketer ID):</label>
+                        <input type="text" id="points-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="points-value">القيمة (موجبة للإضافة، سالبة للخصم):</label>
+                        <input type="number" id="points-value" required>
+                    </div>
+                    <button type="submit">تحديث النقاط</button>
+                </form>
+
+                <h3 style="margin-top: 30px;">2. منح مكافأة (Grant Bonus)</h3>
                 <form class="admin-form" onsubmit="handleGrantBonus(event)">
                     <div class="form-group">
                         <label for="bonus-id">هوية المسوّق (Marketer ID):</label>
@@ -285,14 +314,14 @@
                         <label for="bonus-amount">المبلغ:</label>
                         <input type="number" id="bonus-amount" required>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / 3;">
+                    <div class="form-group full-width">
                         <label for="bonus-reason">السبب:</label>
                         <input type="text" id="bonus-reason" required>
                     </div>
                     <button type="submit">منح المكافأة</button>
                 </form>
 
-                <h3 style="margin-top: 30px;">2. إرسال إشعار (Send Notification)</h3>
+                <h3 style="margin-top: 30px;">3. إرسال إشعار (Send Notification)</h3>
                 <form class="admin-form" onsubmit="handleSendNotification(event)">
                     <div class="form-group">
                         <label for="notif-id">هوية المسوّق (اختياري - للكل اتركها فارغة):</label>
@@ -302,12 +331,61 @@
                         <label for="notif-subject">الموضوع:</label>
                         <input type="text" id="notif-subject" required>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / 3;">
+                    <div class="form-group full-width">
                         <label for="notif-message">الرسالة:</label>
                         <textarea id="notif-message" rows="4" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
                     </div>
                     <button type="submit">إرسال الإشعار</button>
                 </form>
+            </div>
+
+            <div id="reports-settings-content" class="tab-content hidden">
+                
+                <h3>1. تحديث إعدادات المدير (Update Admin Settings)</h3>
+                <form class="admin-form" onsubmit="handleUpdateAdminSettings(event)">
+                    <div class="form-group">
+                        <label for="setting-key">اسم الإعداد (Key):</label>
+                        <input type="text" id="setting-key" required placeholder="مثال: is_registration_open">
+                    </div>
+                    <div class="form-group">
+                        <label for="setting-value">القيمة الجديدة (Value):</label>
+                        <input type="text" id="setting-value" required placeholder="مثال: true أو false">
+                    </div>
+                    <button type="submit">تحديث الإعداد</button>
+                </form>
+
+                <h3 style="margin-top: 30px;">2. إدارة العمليات الشهرية والتقارير</h3>
+                <div class="admin-form" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <button style="grid-column: 1 / 2; background-color: #2196f3;" onclick="handleGenerateReport()">إنشاء تقرير شهري</button>
+                    <button style="grid-column: 2 / 3; background-color: #9c27b0;" onclick="handleCalculateBonus()">حساب وتوزيع المكافآت</button>
+                    <button style="grid-column: 3 / 4; background-color: #e91e63;" onclick="handleGetLeaderboard()">جلب قائمة المتصدرين</button>
+                </div>
+
+                <h3 style="margin-top: 30px;">3. إدارة الدورات التدريبية</h3>
+                <form class="admin-form" onsubmit="handleAddCourse(event)">
+                    <h4 class="full-width" style="margin-top: 0; color: #1e88e5;">إضافة دورة جديدة</h4>
+                    <div class="form-group">
+                        <label for="course-title">عنوان الدورة:</label>
+                        <input type="text" id="course-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="course-price">السعر:</label>
+                        <input type="number" id="course-price" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="course-details">تفاصيل الدورة (JSON):</label>
+                        <textarea id="course-details" rows="3" placeholder='{"link": "...", "points": 50, "commission": 0.2}' required></textarea>
+                    </div>
+                    <button type="submit">إضافة الدورة (add_course)</button>
+                </form>
+                
+                <h4 style="margin-top: 30px;">عرض وتعديل الدورات (Update Course / Get All Courses)</h4>
+                <button class="login-btn" style="width: auto; margin-bottom: 15px; background-color: #009688;" onclick="loadCourses()">عرض كل الدورات</button>
+                <div id="courses-table-container">
+                    <div id="courses-loading-message" class="alert alert-info hidden">جاري تحميل الدورات...</div>
+                    <table class="data-table hidden" id="courses-table"></table>
+                </div>
+
             </div>
 
             <div id="structure-content" class="tab-content hidden">
@@ -321,7 +399,7 @@
                         <label for="col-sheet">اسم الصفحة (Sheet Name):</label>
                         <input type="text" id="col-sheet" value="فروم_المسوقين" required>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / 3;">
+                    <div class="form-group full-width">
                         <label for="col-default">قيمة افتراضية للصفوف الحالية (اختياري):</label>
                         <input type="text" id="col-default">
                     </div>
@@ -334,7 +412,7 @@
                         <label for="sheet-name">اسم الصفحة الجديدة:</label>
                         <input type="text" id="sheet-name" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="sheet-headers">رؤوس الأعمدة مفصولة بفواصل (مثال: col1,col2):</label>
                         <input type="text" id="sheet-headers">
                     </div>
@@ -347,7 +425,7 @@
                         <label for="row-sheet">اسم الصفحة:</label>
                         <input type="text" id="row-sheet" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="row-data">بيانات الصف بصيغة JSON (مثال: {"email": "...", "phone": "..."}):</label>
                         <textarea id="row-data" rows="4" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
                     </div>
@@ -358,9 +436,9 @@
         </div>
     </div>
     
-    <div id="update-modal" class="modal">
+    <div id="update-marketer-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="document.getElementById('update-modal').style.display='none'">&times;</span>
+            <span class="close-btn" onclick="document.getElementById('update-marketer-modal').style.display='none'">&times;</span>
             <h2 style="color: #4CAF50;">تحديث بيانات المسوّق</h2>
             <form id="update-form" class="admin-form" onsubmit="handleUpdateMarketer(event)">
                 <input type="hidden" id="update-marketer-id">
@@ -384,7 +462,7 @@
                         <option value="P">متميّز (P)</option>
                     </select>
                 </div>
-                 <div class="form-group" style="grid-column: 1 / 3;">
+                 <div class="form-group full-width">
                     <label for="update-allowed-serials">الأجهزة المسموحة (JSON Array):</label>
                     <input type="text" id="update-allowed-serials" placeholder='مثال: ["serial1", "serial2"]'>
                 </div>
@@ -393,11 +471,79 @@
         </div>
     </div>
     
+    <div id="update-course-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('update-course-modal').style.display='none'">&times;</span>
+            <h2 style="color: #009688;">تعديل بيانات الدورة التدريبية</h2>
+            <form id="update-course-form" class="admin-form" onsubmit="handleUpdateCourse(event)">
+                <input type="hidden" id="update-course-id">
+                <div class="form-group">
+                    <label for="update-course-title">عنوان الدورة:</label>
+                    <input type="text" id="update-course-title">
+                </div>
+                <div class="form-group">
+                    <label for="update-course-price">السعر:</label>
+                    <input type="number" id="update-course-price">
+                </div>
+                <div class="form-group full-width">
+                    <label for="update-course-details">تفاصيل الدورة (JSON):</label>
+                    <textarea id="update-course-details" rows="3"></textarea>
+                </div>
+                <button type="submit">حفظ تحديثات الدورة</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="process-ticket-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('process-ticket-modal').style.display='none'">&times;</span>
+            <h2 style="color: #00bcd4;">معالجة تذكرة دعم</h2>
+            <form id="process-ticket-form" class="admin-form" onsubmit="handleReplyTicket(event)">
+                <input type="hidden" id="ticket-id-reply">
+                <div class="form-group full-width">
+                    <label for="ticket-reply-message">رسالة الرد:</label>
+                    <textarea id="ticket-reply-message" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="ticket-new-status">حالة التذكرة الجديدة:</label>
+                    <select id="ticket-new-status">
+                        <option value="قيد المراجعة">قيد المراجعة</option>
+                        <option value="تم الحل">تم الحل</option>
+                        <option value="مغلقة">مغلقة</option>
+                    </select>
+                </div>
+                <button type="submit">إرسال الرد وتحديث الحالة</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="process-withdrawal-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('process-withdrawal-modal').style.display='none'">&times;</span>
+            <h2 style="color: #8bc34a;">معالجة طلب سحب رصيد</h2>
+            <form id="process-withdrawal-form" class="admin-form" onsubmit="handleProcessWithdrawal(event)">
+                <input type="hidden" id="withdrawal-id">
+                <div class="form-group">
+                    <label for="withdrawal-action">الإجراء:</label>
+                    <select id="withdrawal-action">
+                        <option value="approve">اعتماد</option>
+                        <option value="reject">رفض</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawal-reason">ملاحظات المدير (اختياري):</label>
+                    <input type="text" id="withdrawal-reason">
+                </div>
+                <button type="submit">تنفيذ معالجة السحب</button>
+            </form>
+        </div>
+    </div>
+    
     <div id="api-message-global" class="alert hidden" style="max-width: 80%; margin: 20px auto;"></div>
 
     <script>
         // ---------------------- الثوابت ----------------------
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzcB7EojreEWOelJFTQxrMQRuZ2Eps4I27z6Pedi79jd2c5YjhpsG5FU66NR1GqyddPcw/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwb8rdP4_4Md2Xd0jbfTmiTVgG7sNtkYv4_SonjZsA2AUwoFSijqWPcXuCejFbDmOeG6Q/exec';
         let ADMIN_KEY = '';
 
         // ---------------------- دوال مساعدة عامة ----------------------
@@ -430,10 +576,71 @@
             document.getElementById(`${tabName}-content`).classList.remove('hidden');
             document.querySelector(`.tab-button[data-tab="${tabName}"]`).classList.add('active');
             
-            // تحميل قائمة المسوّقين عند التبديل إلى التبويب الرئيسي
+            // تحميل البيانات عند التبديل
             if (tabName === 'marketers') {
                 loadMarketers();
+            } else if (tabName === 'tickets') {
+                 loadTickets(); 
+            } else if (tabName === 'reports-settings') {
+                loadCourses(); 
             }
+        }
+        
+        function renderTable(containerId, dataArray, actionsRenderer) {
+             const container = document.getElementById(containerId);
+             container.innerHTML = '';
+             
+             if (!dataArray || dataArray.length === 0) {
+                container.innerHTML = `<table class="data-table"><tbody><tr><td>لا توجد بيانات للعرض.</td></tr></tbody></table>`;
+                return;
+             }
+
+             const table = document.createElement('table');
+             table.className = 'data-table';
+             
+             const headers = Object.keys(dataArray[0]).filter(h => !['password', 'otp_code', 'otp_expiry'].includes(h));
+             
+             // بناء الرؤوس
+             let headerRow = '<thead><tr>';
+             headers.forEach(h => headerRow += `<th>${h}</th>`);
+             if (actionsRenderer) {
+                headerRow += '<th>الإجراءات</th>';
+             }
+             headerRow += '</tr></thead>';
+             
+             // بناء جسم الجدول
+             let bodyRows = '<tbody>';
+             dataArray.forEach(item => {
+                 bodyRows += '<tr>';
+                 headers.forEach(h => {
+                     let cellValue = item[h];
+                     // تنسيق التواريخ
+                     if (cellValue && (h.includes('تاريخ') || h.includes('expiry') || h.toLowerCase().includes('date'))) {
+                         try {
+                            cellValue = new Date(cellValue).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                         } catch (e) { /* ignore */ }
+                     }
+                      // تنسيق JSON
+                     if (typeof cellValue === 'string' && (cellValue.startsWith('[') || cellValue.startsWith('{'))) {
+                         try {
+                              cellValue = JSON.stringify(JSON.parse(cellValue), null, 2);
+                         } catch(e) {
+                              // keep as is
+                         }
+                     }
+ 
+                     bodyRows += `<td title="${item[h]}">${cellValue}</td>`;
+                 });
+
+                 if (actionsRenderer) {
+                    bodyRows += `<td>${actionsRenderer(item)}</td>`;
+                 }
+                 bodyRows += '</tr>';
+             });
+             bodyRows += '</tbody>';
+
+             table.innerHTML = headerRow + bodyRows;
+             container.appendChild(table);
         }
 
         // ---------------------- دالة الاتصال بالـ API ----------------------
@@ -449,18 +656,19 @@
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'cors',
-                    headers: { 'Content-Type': 'text/plain' }, // Apps Script requires text/plain for raw JSON post data
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(body)
                 });
                 
                 const text = await response.text();
-                // قد يحتاج Apps Script أحياناً إلى معالجة خاصة
                 const result = JSON.parse(text);
 
-                if (result.success) {
-                    showMessage('api-message-global', result.message, 'success');
-                } else {
-                    showMessage('api-message-global', `فشل العملية: ${result.message}`, 'error');
+                if (action !== 'get_all_marketers' && action !== 'get_tickets' && action !== 'get_all_courses') {
+                    if (result.success) {
+                        showMessage('api-message-global', result.message, 'success');
+                    } else {
+                        showMessage('api-message-global', `فشل العملية: ${result.message}`, 'error');
+                    }
                 }
                 return result;
 
@@ -479,8 +687,6 @@
                 return;
             }
 
-            // لا نحتاج لاستدعاء login، يكفي تخزين المفتاح والتحقق منه في كل استدعاء إداري
-            // لكن هنا نستخدم استدعاء تجريبي للتحقق من المفتاح عبر محاولة جلب البيانات
             ADMIN_KEY = key;
             
             document.getElementById('login-message').textContent = 'جاري التحقق...';
@@ -496,7 +702,7 @@
                     loadMarketers();
                 } else {
                     showMessage('login-message', 'فشل تسجيل الدخول. مفتاح المدير غير صحيح.', 'error', false);
-                    ADMIN_KEY = ''; // مسح المفتاح الخاطئ
+                    ADMIN_KEY = ''; 
                 }
             });
         }
@@ -514,83 +720,33 @@
         // ---------------------- وظائف لوحة المسوّقين ----------------------
 
         async function loadMarketers() {
-            document.getElementById('loading-message').classList.remove('hidden');
-            document.getElementById('marketers-table').classList.add('hidden');
+            const loadingEl = document.getElementById('loading-message');
+            loadingEl.classList.remove('hidden');
             
             const result = await fetchData('get_all_marketers', {});
 
-            document.getElementById('loading-message').classList.add('hidden');
+            loadingEl.classList.add('hidden');
 
             if (result.success && result.marketers) {
-                renderMarketersTable(result.marketers);
-                document.getElementById('marketers-table').classList.remove('hidden');
+                 renderTable('marketers-table-container', result.marketers, (marketer) => `
+                    <button class="btn-update" onclick="openUpdateMarketerModal('${marketer.marketer_id}', ${JSON.stringify(marketer).replace(/'/g, '&#39;')})">تعديل</button>
+                    <button class="btn-bonus" onclick="handleQuickBonus('${marketer.marketer_id}')">مكافأة</button>
+                    <button class="btn-unlock" onclick="handleUnlockAccount('${marketer.marketer_id}')">إلغاء حظر</button>
+                    <button class="btn-delete" onclick="handleDeleteMarketer('${marketer.marketer_id}')">حذف</button>
+                 `);
             } else {
                  document.getElementById('marketers-table-container').innerHTML = `<div class="alert alert-error">فشل تحميل بيانات المسوّقين: ${result.message}</div>`;
             }
         }
-
-        function renderMarketersTable(marketers) {
-            const table = document.getElementById('marketers-table');
-            table.innerHTML = ''; 
-
-            if (marketers.length === 0) {
-                table.innerHTML = '<tbody><tr><td colspan="10">لا يوجد مسوّقون مسجلون.</td></tr></tbody>';
-                return;
-            }
-
-            const headers = Object.keys(marketers[0]).filter(h => !['password', 'otp_code', 'otp_expiry'].includes(h));
-            
-            // بناء الرؤوس
-            let headerRow = '<thead><tr>';
-            headers.forEach(h => headerRow += `<th>${h}</th>`);
-            headerRow += '<th>الإجراءات</th></tr></thead>';
-            
-            // بناء جسم الجدول
-            let bodyRows = '<tbody>';
-            marketers.forEach(marketer => {
-                bodyRows += '<tr>';
-                headers.forEach(h => {
-                    let cellValue = marketer[h];
-                    // تنسيق التواريخ
-                    if (cellValue && (h.includes('تاريخ') || h.includes('expiry'))) {
-                        cellValue = new Date(cellValue).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                    }
-                     // تنسيق JSON
-                    if (h === 'allowed_serials') {
-                        try {
-                             cellValue = JSON.parse(cellValue).join(', ');
-                        } catch(e) {
-                             cellValue = cellValue;
-                        }
-                    }
-
-                    bodyRows += `<td title="${marketer[h]}">${cellValue}</td>`;
-                });
-                
-                bodyRows += `
-                    <td>
-                        <button class="btn-update" onclick="openUpdateModal('${marketer.marketer_id}', ${JSON.stringify(marketer).replace(/'/g, '&#39;')})">تعديل</button>
-                        <button class="btn-bonus" onclick="handleQuickBonus('${marketer.marketer_id}')">مكافأة</button>
-                        <button class="btn-unlock" onclick="handleUnlockAccount('${marketer.marketer_id}')">إلغاء حظر</button>
-                        <button class="btn-delete" onclick="handleDeleteMarketer('${marketer.marketer_id}')">حذف</button>
-                    </td>
-                </tr>`;
-            });
-            bodyRows += '</tbody>';
-
-            table.innerHTML = headerRow + bodyRows;
-        }
-
-        // ---------------------- وظائف الإجراءات ----------------------
-
-        function openUpdateModal(marketerId, data) {
+        
+        function openUpdateMarketerModal(marketerId, data) {
             document.getElementById('update-marketer-id').value = marketerId;
             document.getElementById('update-fullname').value = data.fullname || '';
             document.getElementById('update-email').value = data.email || '';
             document.getElementById('update-status').value = data['الحالة'] || 'N';
             document.getElementById('update-allowed-serials').value = data.allowed_serials || '[]';
             document.getElementById('update-password').value = ''; 
-            document.getElementById('update-modal').style.display = 'block';
+            document.getElementById('update-marketer-modal').style.display = 'block';
         }
 
         async function handleUpdateMarketer(event) {
@@ -612,7 +768,7 @@
             const result = await fetchData('update_marketer', { marketer_id: marketerID, updates: updates });
 
             if (result.success) {
-                document.getElementById('update-modal').style.display = 'none';
+                document.getElementById('update-marketer-modal').style.display = 'none';
                 loadMarketers();
             }
         }
@@ -635,6 +791,78 @@
             }
         }
         
+        // ---------------------- وظائف تذاكر الدعم والسحب ----------------------
+
+        async function loadTickets() {
+            const loadingEl = document.getElementById('tickets-loading-message');
+            loadingEl.classList.remove('hidden');
+            
+            // المدير يجلب كل التذاكر وطلبات السحب (إذا كانت موجودة في نفس الـ Action)
+            const result = await fetchData('get_tickets', { type: 'all' }); 
+
+            loadingEl.classList.add('hidden');
+
+            if (result.success && result.tickets) {
+                 renderTable('tickets-table-container', result.tickets, (ticket) => {
+                     let buttons = `<button class="btn-process" onclick="openProcessTicketModal('${ticket.ticket_id}')">رد/إغلاق</button>`;
+                     if (ticket['النوع'] && ticket['النوع'].toLowerCase().includes('سحب')) {
+                         buttons += `<button class="btn-process" onclick="openProcessWithdrawalModal('${ticket.ticket_id}')">معالجة سحب</button>`;
+                     }
+                     return buttons;
+                 });
+            } else {
+                 document.getElementById('tickets-table-container').innerHTML = `<div class="alert alert-error">فشل تحميل تذاكر الدعم/السحب: ${result.message}</div>`;
+            }
+        }
+        
+        function openProcessTicketModal(ticketId) {
+            document.getElementById('ticket-id-reply').value = ticketId;
+            document.getElementById('process-ticket-modal').style.display = 'block';
+        }
+        
+        async function handleReplyTicket(event) {
+            event.preventDefault();
+            const ticketID = document.getElementById('ticket-id-reply').value;
+            const replyMessage = document.getElementById('ticket-reply-message').value;
+            const newStatus = document.getElementById('ticket-new-status').value;
+            
+            const result = await fetchData('reply_ticket', { ticket_id: ticketID, reply_message: replyMessage, status: newStatus });
+            
+            if (result.success) {
+                 document.getElementById('process-ticket-modal').style.display = 'none';
+                 loadTickets(); 
+            }
+        }
+        
+        function openProcessWithdrawalModal(withdrawalId) {
+            document.getElementById('withdrawal-id').value = withdrawalId;
+            document.getElementById('process-withdrawal-modal').style.display = 'block';
+        }
+        
+        async function handleProcessWithdrawal(event) {
+            event.preventDefault();
+            const withdrawalID = document.getElementById('withdrawal-id').value;
+            const action = document.getElementById('withdrawal-action').value;
+            const reason = document.getElementById('withdrawal-reason').value;
+            
+            const result = await fetchData('process_withdrawal', { withdrawal_id: withdrawalID, action: action, reason: reason });
+
+            if (result.success) {
+                 document.getElementById('process-withdrawal-modal').style.display = 'none';
+                 loadTickets(); // تحديث القائمة بعد المعالجة
+            }
+        }
+
+        // ---------------------- وظائف الإجراءات الجماعية ----------------------
+        
+        async function handleUpdatePoints(event) {
+             event.preventDefault();
+             const marketerID = document.getElementById('points-id').value;
+             const value = parseFloat(document.getElementById('points-value').value);
+             
+             await fetchData('update_points', { marketer_id: marketerID, points_change: value });
+        }
+
         async function handleQuickBonus(marketerID) {
              const amount = prompt(`أدخل مبلغ المكافأة للمسوّق ${marketerID}:`);
              if (amount && !isNaN(amount)) {
@@ -664,6 +892,113 @@
             
             await fetchData('send_notification_admin', { marketer_id: marketerID, subject: subject, message: message });
         }
+
+        // ---------------------- وظائف الإعدادات والتقارير ----------------------
+
+        async function handleUpdateAdminSettings(event) {
+             event.preventDefault();
+             const key = document.getElementById('setting-key').value;
+             const value = document.getElementById('setting-value').value;
+             
+             const settings = {};
+             settings[key] = value;
+             
+             await fetchData('update_admin_settings', { settings: settings });
+        }
+        
+        async function handleGenerateReport() {
+             if (confirm("هل أنت متأكد من رغبتك في إنشاء التقرير الشهري الإحصائي الآن؟")) {
+                 await fetchData('generate_monthly_report', {});
+             }
+        }
+
+        async function handleCalculateBonus() {
+             if (confirm("هل أنت متأكد من رغبتك في حساب وتوزيع المكافآت الشهرية الآن؟")) {
+                 await fetchData('calculate_monthly_bonus', {});
+             }
+        }
+
+        async function handleGetLeaderboard() {
+             const result = await fetchData('get_leaderboard', {});
+             if (result.success && result.leaderboard) {
+                renderTable('courses-table-container', result.leaderboard, (item) => '---');
+                showMessage('api-message-global', 'تم عرض قائمة المتصدرين بنجاح. انظر أسفل نموذج الدورات.', 'success');
+             }
+        }
+        
+        // --- إدارة الدورات ---
+        async function loadCourses() {
+             const loadingEl = document.getElementById('courses-loading-message');
+             loadingEl.classList.remove('hidden');
+             
+             const result = await fetchData('get_all_courses', {});
+             
+             loadingEl.classList.add('hidden');
+             
+             if (result.success && result.courses) {
+                 renderTable('courses-table-container', result.courses, (course) => `
+                    <button class="btn-update" onclick="openUpdateCourseModal('${course.course_id}', ${JSON.stringify(course).replace(/'/g, '&#39;')})">تعديل</button>
+                 `);
+             } else {
+                 document.getElementById('courses-table-container').innerHTML = `<div class="alert alert-error">فشل تحميل بيانات الدورات: ${result.message}</div>`;
+             }
+        }
+
+        async function handleAddCourse(event) {
+             event.preventDefault();
+             const title = document.getElementById('course-title').value;
+             const price = parseFloat(document.getElementById('course-price').value);
+             const details = document.getElementById('course-details').value;
+
+             let detailsObject;
+             try {
+                detailsObject = JSON.parse(details);
+             } catch (e) {
+                 showMessage('api-message-global', 'الرجاء التأكد من صحة صيغة JSON لتفاصيل الدورة.', 'error');
+                 return;
+             }
+             
+             const result = await fetchData('add_course', { title: title, price: price, details: detailsObject });
+             if (result.success) {
+                 loadCourses(); 
+             }
+        }
+        
+        function openUpdateCourseModal(courseId, data) {
+            document.getElementById('update-course-id').value = courseId;
+            document.getElementById('update-course-title').value = data.title || '';
+            document.getElementById('update-course-price').value = data.price || '';
+            document.getElementById('update-course-details').value = data.details ? JSON.stringify(data.details, null, 2) : ''; 
+            document.getElementById('update-course-modal').style.display = 'block';
+        }
+        
+        async function handleUpdateCourse(event) {
+            event.preventDefault();
+            const courseID = document.getElementById('update-course-id').value;
+            const title = document.getElementById('update-course-title').value;
+            const price = parseFloat(document.getElementById('update-course-price').value);
+            const details = document.getElementById('update-course-details').value;
+
+            let detailsObject;
+            try {
+               detailsObject = JSON.parse(details);
+            } catch (e) {
+                showMessage('api-message-global', 'الرجاء التأكد من صحة صيغة JSON لتفاصيل الدورة.', 'error');
+                return;
+            }
+            
+            const updates = { title: title, price: price, details: detailsObject };
+            
+            const result = await fetchData('update_course', { course_id: courseID, updates: updates });
+
+            if (result.success) {
+                document.getElementById('update-course-modal').style.display = 'none';
+                loadCourses(); 
+            }
+        }
+
+
+        // ---------------------- وظائف هيكلة البيانات ----------------------
         
         async function handleAddColumn(event) {
             event.preventDefault();
@@ -702,8 +1037,7 @@
 
         // ---------------------- التنفيذ عند التحميل ----------------------
         document.addEventListener('DOMContentLoaded', () => {
-            // التحقق مما إذا كان هناك مفتاح مخزن مسبقاً (لجلسة متصفح)
-            // إذا لم يكن هناك، تبقى شاشة الدخول ظاهرة.
+            // لا يوجد إجراء تلقائي عند التحميل، يترك شاشة الدخول أولاً.
         });
 
     </script>
