@@ -285,17 +285,33 @@
         </div>
 
         <div id="dashboardContent" style="display:none;">
+        	
+        
+        
+        
+
+<script>
+  // 🔹 تحميل بطاقة الرصيد من الملف Balance.html داخل الـ div
+  fetch('Balance.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('dashboardContent').innerHTML = html;
+
+      // بعد تحميل البطاقة، نظهر القسم
+      document.getElementById('dashboardContent').style.display = 'block';
+    })
+    .catch(error => {
+      console.error('فشل تحميل البطاقة:', error);
+    });
+</script>
+
+
+
+
             
-            <div class="stats-grid">
-                <div class="stats-card">
-                    <h2><i class="fas fa-users card-title-icon"></i> إجمالي عدد المسجّلين عبر الرابط الخاص بك</h2>
-                    <span class="stats-count" id="referrals-count">0</span>
-                </div>
-                <div class="stats-card active-card">
-                    <h2><i class="fas fa-check-circle card-title-icon"></i> المسجّلون النشطون (الحالة Y)</h2>
-                    <span class="stats-count" id="active-referrals-count">0</span>
-                </div>
-            </div>
+            
+            
+            
             
             <div class="stats-card" style="margin-bottom: 20px;">
                 <h2 style="margin-top: 0;"><i class="fas fa-link card-title-icon"></i> رابط الإحالة الخاص بك</h2>
