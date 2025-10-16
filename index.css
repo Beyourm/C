@@ -1,0 +1,307 @@
+/* ---------------------------------------------------------------------- */
+/* **متغيرات CSS (Variables)** */
+/* ---------------------------------------------------------------------- */
+:root {
+  --primary-color: #0d3b14;
+  --secondary-color: #e5a72d;
+  --accent-color: #f7f3e9;
+  --text-color-dark: #2d3748;
+  --muted-color: #4a5568;
+  --white-color: #ffffff;
+  --border-radius-lg: 20px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* **الرسوم المتحركة (Animations)** */
+/* ---------------------------------------------------------------------- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes progress { 0% { width: 0; } 100% { width: 100%; } } 
+
+/* نمط خاص لجعل ايقونة التحميل (السبينر) تدور */
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* **الأنماط الأساسية (Base Styles)** */
+/* ---------------------------------------------------------------------- */
+body{
+  font-family: "Tajawal", sans-serif;
+  background: linear-gradient(135deg, #f0f4f9 0%, #e8eef5 100%); 
+  margin:0; padding:24px;
+  display:flex; justify-content:center; align-items:center;
+  min-height:100vh; color: var(--text-color-dark);
+}
+
+.container{width:100%;max-width:760px}
+.card{
+  background:var(--white-color);
+  border-radius:var(--border-radius-lg);
+  box-shadow:0 16px 50px rgba(0,0,0,0.15);
+  overflow:hidden;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+header{background: var(--primary-color);color:#fff;padding:30px;text-align:center;}
+
+header h1{margin:0;font-size:28px;font-weight:900} 
+.content{padding:30px}
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط التبديل بين النماذج (Tabs)** */
+/* ---------------------------------------------------------------------- */
+#actionSelector { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+.action-btn { 
+  background: none; color: var(--primary-color); border: 2px solid var(--primary-color); 
+  padding: 10px 20px; border-radius: 12px; font-weight: 700; opacity: 0.7; cursor:pointer; 
+  transition: all 0.3s ease; 
+}
+.action-btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.action-btn:active { transform: scale(0.97); } 
+.action-btn.active { background: var(--primary-color); color: var(--white-color); opacity: 1; box-shadow: 0 4px 12px rgba(13, 59, 20, 0.2); }
+
+.form-wrapper { transition: transform 0.4s ease-out, opacity 0.4s ease-out; display: none; opacity: 0; }
+.form-wrapper.active { display: block; opacity: 1; }
+.form-wrapper.slide-in-right { animation: slideRight 0.4s ease-out forwards; }
+.form-wrapper.slide-in-left { animation: slideLeft 0.4s ease-out forwards; }
+.form-wrapper.slide-out-right { animation: slideRight 0.4s ease-out reverse forwards; }
+.form-wrapper.slide-out-left { animation: slideLeft 0.4s ease-out reverse forwards; }
+
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط الشروط والتسجيل (Terms & Signup)** */
+/* ---------------------------------------------------------------------- */
+.terms{max-height:420px; overflow:auto; padding:20px; border-radius:15px; background:var(--accent-color); border:1px solid rgba(13, 59, 20, 0.1);}
+.terms::-webkit-scrollbar { width: 6px; }
+.terms::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 10px; }
+.terms::-webkit-scrollbar-track { background-color: #ddd; }
+
+.terms h3{color:var(--primary-color); margin-top:0;}
+.terms ol li strong{color:var(--secondary-color)} 
+
+#termsSection.compact { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+#termsSection.compact .terms { max-height: 50px; padding: 10px; border: 1px dashed #ccc; background: transparent; }
+#termsSection.compact h3, #termsSection.compact .note, #termsSection.compact ol { display: none; }
+#termsSection.compact .actions { justify-content: flex-start; margin-top: 0; }
+
+#acceptCheckbox { display: none; }
+.approval-label::before {
+  content: "☐";
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--primary-color);
+  font-size: 1.2em;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+#acceptCheckbox:checked + .approval-label::before {
+  content: "☑"; 
+  color: #1a5c24; 
+  transform: scale(1.2);
+}
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط الأزرار وحالة التحميل (Buttons & Loading State)** */
+/* ---------------------------------------------------------------------- */
+button { cursor:pointer; border:0; font-weight:700; transition: all 0.3s ease; padding:12px 20px; border-radius:15px; }
+button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+button:active { transform: translateY(1px) scale(0.98); }
+
+.btn-accept { 
+  background: linear-gradient(135deg, #1a5c24, #0d3b14); 
+  color:var(--white-color); 
+  box-shadow: 0 4px 12px rgba(13, 59, 20, 0.3); 
+}
+.btn-accept:hover:not(:disabled) { 
+  background: linear-gradient(135deg, #0d3b14, #1a5c24); 
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* حالة التعطيل العادية وحالة التحميل */
+.btn-accept:disabled, 
+.btn-decline:disabled { 
+    background-color: #ccc !important; 
+    cursor: not-allowed !important; 
+    box-shadow: none; 
+    transform: none; 
+}
+.btn-accept:disabled.loading,
+.btn-decline:disabled.loading,
+#verifyOtpBtn:disabled.loading {
+    /* تغيير بسيط في لون الخلفية للإشارة إلى حالة التوقف/الانتظار */
+    opacity: 0.8;
+    cursor: wait; /* تغيير مؤشر الماوس */
+    background-color: var(--primary-color); /* إبقاء اللون الأساسي ولكن مع التعتيم */
+}
+
+/* نمط أيقونة التحميل داخل الزر */
+.fa-spin {
+    display: inline-block;
+    animation: fa-spin 1s infinite linear;
+    margin-left: 5px; /* مسافة بين الأيقونة والنص */
+}
+
+.btn-decline { background:var(--accent-color); color:var(--primary-color); border: 1px solid var(--primary-color); }
+#backBtn { padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+#backBtn i { font-size: 16px; margin-right: 5px; }
+
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط النموذج العام (Form Layout)** */
+/* ---------------------------------------------------------------------- */
+.actions { display:flex; align-items:center; gap:10px; margin-top:20px; flex-wrap: wrap; }
+form{display:block; padding:20px 0; border-top:1px solid #eef2f7;}
+#loginForm { border-top: none; }
+#signupForm { display: none; padding-top:0; }
+#signupForm.show { display: block; }
+
+form h3{color:var(--secondary-color); font-size: 20px; font-weight: 800;} 
+
+.row{display:flex; gap:15px; margin-bottom:15px;}
+.col{flex:1; position: relative;}
+label{display:block;font-size:14px;color:var(--muted-color);margin-bottom:6px;}
+
+.input-wrapper { position: relative; }
+
+.decorator-icon { 
+    position: absolute; 
+    top: 50%; 
+    right: 12px; 
+    transform: translateY(-50%); 
+    color: var(--muted-color); 
+    font-size: 16px; 
+    pointer-events: none; 
+    z-index: 5;
+}
+
+.toggle-password {
+    position: absolute; 
+    left: 12px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    cursor: pointer; 
+    color: var(--muted-color); 
+    z-index: 10; 
+    transition: color 0.2s;
+}
+.toggle-password:hover { color: var(--primary-color); }
+
+input:valid:not(:placeholder-shown):not([type="password"]) { border-color: #1a5c24; }
+input:invalid:not(:placeholder-shown):not([type="password"]) { border-color: #721c24; }
+
+
+input,select{width:100%; padding:14px 40px 14px 40px; border-radius:15px; border:1px solid #e6eef8; background:#fff; font-size:15px; transition:border-color 0.3s, background-color 0.3s; }
+input:focus, select:focus{border-color:var(--primary-color); background-color: var(--accent-color); outline:none; box-shadow:none;}
+
+.note{font-size:13px;color:var(--muted-color);margin-top:15px}
+
+.success, .error { 
+    display: none; padding:18px; border-radius:10px; margin-top:15px; font-weight:bold; line-height:1.5; 
+    opacity:0; transition: all 0.5s ease; 
+    transform: translateY(-20px); 
+    align-items: center; gap: 10px;
+}
+.success { background:#d4edda; color:#155724; border: 1px solid #c3e6cb; }
+.error { 
+    background: #fce4e4; 
+    color: #b71c1c; 
+    border: 1px solid #f8c1c1; 
+    font-weight:500; 
+}
+.success.show, .error.show { opacity:1; display:flex; transform: translateY(0); }
+.success i, .error i { font-size: 1.2em; }
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط عرض رابط الإحالة (Affiliate Link)** */
+/* ---------------------------------------------------------------------- */
+#affiliateLinkDisplay { padding-right: 40px !important; cursor: text !important; font-weight: 600 !important; background-color: #fff !important; }
+.copy-link-container { position: relative; margin-top: 10px; }
+#copyButton { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: var(--secondary-color); color: var(--primary-color); padding: 5px 8px; border-radius: 8px; font-size: 14px; font-weight: bold; z-index: 5; cursor: pointer; transition: all 0.3s ease; }
+#copyButton:hover { background: #d89a27; transform: translateY(-50%) scale(1.05); }
+
+#copyMessage { 
+    position: absolute; 
+    top: 0; 
+    left: 50%;
+    transform: translate(-50%, -100%); 
+    background-color: var(--primary-color); color:white; 
+    padding:8px 15px; border-radius:10px; 
+    box-shadow:0 4px 15px rgba(0,0,0,0.2); z-index:1000; 
+    opacity:0; pointer-events:none; 
+    transition: all 0.4s ease; 
+    min-width: 150px; text-align: center;
+}
+#copyButtonContainer { position: relative; display: inline-block; margin-top: 10px; }
+
+
+/* ---------------------------------------------------------------------- */
+/* **أنماط رمز التحقق لمرة واحدة (OTP)** */
+/* ---------------------------------------------------------------------- */
+
+#otpInputContainer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 100%; /* تأكد من أنه يملأ المساحة المتاحة */
+}
+
+#otpCode {
+    text-align: center; 
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem; 
+    font-weight: bold;
+    color: var(--primary-color);
+    border: 2px solid var(--secondary-color); 
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: 100%;
+    max-width: 250px; 
+    transition: border-color 0.3s;
+}
+
+#otpCode:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13, 59, 20, 0.2); 
+}
+
+#otpInputContainer .col {
+    width: 100% !important; 
+    padding: 0;
+}
+
+#verifyOtpBtn {
+    /* تطبيق أنماط الأزرار العامة */
+    background: linear-gradient(135deg, #1a5c24, #0d3b14); 
+    color: var(--white-color);
+    border: none;
+    border-radius: 15px; /* للحفاظ على التناسق مع الأزرار الأخرى */
+    font-size: 1rem;
+    padding: 12px 20px;
+    margin-top: 15px;
+}
+/* تم دمج أنماط :hover و :disabled مع أنماط الأزرار العامة في الأعلى */
+
+
+/* ---------------------------------------------------------------------- */
+/* **تعديلات شاشات الجوال (Media Queries)** */
+/* ---------------------------------------------------------------------- */
+@media (max-width:600px){
+  .container { 
+      width: 95%; 
+      max-width: none; 
+  }
+  .row{flex-direction:column; gap: 20px;} 
+  input, select { padding:18px 45px 18px 45px; font-size:16px; } 
+  .content { padding: 20px; }
+  button { padding: 14px 25px; font-size: 16px; }
+  #backBtn { padding: 14px 20px; }
+  .decorator-icon { right: 15px; } 
+  .toggle-password { left: 15px; } 
+  #otpCode { max-width: 200px; padding: 12px 10px; font-size: 1.1rem; }
+}
