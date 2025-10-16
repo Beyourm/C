@@ -1,0 +1,152 @@
+/* ---------------------------------------------------- */
+/* --- تنسيقات منطقة البطاقات والبحث والتنزيل --- */
+/* ---------------------------------------------------- */
+
+.referrals-section {
+    margin-top: 40px;
+}
+
+.referrals-header {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.referrals-header .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box; 
+    direction: rtl;
+    text-align: right;
+}
+
+#searchInput:disabled {
+    background-color: #f7f7f7;
+    cursor: not-allowed;
+}
+
+/* 🚀 حاوية البطاقات: عرض مرن بسيط (Grid أو Flex) */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* عرض متجاوب */
+    gap: 20px;
+    padding: 10px 0;
+    max-height: 500px; /* لتحديد ارتفاع وتسهيل التمرير */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ---------------------------------------------------- */
+/* --- أنماط البطاقة (Card) --- */
+/* ---------------------------------------------------- */
+
+.referral-card {
+    background: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 20px;
+    border-right: 5px solid var(--primary-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.referral-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* تظليل البطاقة حسب الحالة */
+.referral-card.status-Y { border-right-color: var(--success-color); background-color: var(--status-y-bg); }
+.referral-card.status-N { border-right-color: var(--danger-color); background-color: var(--status-n-bg); }
+.referral-card.status-pending { border-right-color: var(--secondary-color); background-color: var(--status-pending-bg); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.card-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.card-status {
+    font-weight: 700;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.status-active { color: var(--success-color); }
+.status-inactive { color: var(--danger-color); }
+
+.card-details p {
+    margin: 8px 0;
+    display: flex;
+    justify-content: flex-end; /* لتوحيد اتجاه المحتوى داخل البطاقة */
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-color-dark);
+}
+
+.card-details p i {
+    color: var(--muted-color);
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+.card-details span.label {
+    font-weight: 600;
+    color: var(--muted-color);
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+.card-details span.value {
+    text-align: left;
+    direction: ltr; 
+    flex-grow: 1;
+}
+
+
+/* تنسيقات زر التنزيل ورسالة لا توجد بيانات */
+.download-btn {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 700;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+}
+.download-btn:hover {
+    background: #d4951c;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--muted-color);
+}
