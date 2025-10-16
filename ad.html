@@ -1,359 +1,91 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>لوحة تحكم المسوِّق</title> 
 
-    <meta property="og:title" content="لوحة تحكم المسوِّق" /> 
-    <meta property="og:description" content="راجع إحصائيات إحالتك عبر الرابط الخاص بك." /> 
-    <meta property="og:image" content="https://skillia.netlify.app/images/photo.jpg" />
-    <meta property="og:url" content="https://sklilia.netlify.app/Trainees_Records" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ar_AR" />
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../assets/fonts/tajawal.css">
+<html lang="ar" dir="rtl">  
+<head>  
+    <meta charset="utf-8" />  
+    <meta name="viewport" content="width=device-width,initial-scale=1" />  
+    <title>لوحة تحكم المسوِّق</title>   
+    <meta property="og:title" content="لوحة تحكم المسوِّق" />   
+    <meta property="og:description" content="راجع إحصائيات إحالتك عبر الرابط الخاص بك." />   
+    <meta property="og:image" content="https://skillia.netlify.app/images/photo.jpg" />  
+    <meta property="og:url" content="https://sklilia.netlify.app/Trainees_Records" />  
+    <meta property="og:type" content="website" />  
+    <meta property="og:locale" content="ar_AR" />  
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+    <link rel="stylesheet" href="../assets/fonts/tajawal.css">  
 
-    <link rel="stylesheet" href="table-styles.css"> 
+    <link rel="stylesheet" href="table-styles.css">   
+    <link rel="stylesheet" href="style.css">   
+</head>  
+<body>  
+    <div class="dashboard-container">  
+        <header>  
+            <h1>لوحة تحكم المسوِّق</h1>  
+            <p id="marketer-id-display">الرجاء إدخال المعرّف في الرابط</p>  
+        </header>  
+        <div class="content">  
+            <div id="statusMessage" class="loading" style="text-align:center; color:#555;">  
+                <span class="spinner"></span> جارٍ جلب البيانات...  
+            </div>  
 
-    <style>
-        :root {
-            --primary-color: #0d3b14; 
-            --secondary-color: #e5a72d; 
-            --accent-color: #f7f3e9; 
-            --text-color-dark: #2d3748;
-            --danger-color: #dc3545;
-            --white-color: #ffffff; 
-            --muted-color: #4a5568;
-            --success-color: #28a745;
-            --status-y-bg: #e8f9ed; 
-            --status-n-bg: #f9e8e8; 
-            --status-pending-bg: #fff8e8; 
-        }
+            <div id="dashboardContent" style="display:none;">
 
-        body {
-            font-family: "Tajawal", sans-serif;
-            background: linear-gradient(120deg, var(--accent-color) 0%, #eaf0f5 100%); 
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            color: var(--text-color-dark);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .dashboard-container {
-            width: 100%;
-            max-width: 900px; 
-            margin-top: 50px;
-            background: var(--white-color);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
-            overflow: hidden;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        header {
-            background: var(--primary-color);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            position: relative;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-        }
-        
-        header p {
-            margin-top: 5px;
-            font-size: 16px;
-            line-height: 1.4;
-        }
-        
-        .id-highlight {
-            font-weight: 900;
-            color: var(--secondary-color);
-            direction: ltr;
-        }
-
-        .content {
-            padding: 30px;
-        }
-        
-        /* 1. تنسيق رسالة الحالة والـ Spinner */
-        #statusMessage {
-            padding: 15px;
-            font-weight: 700;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .loading { color: var(--muted-color); border: 1px solid #ccc;} 
-        .success { background-color: var(--status-y-bg); color: var(--success-color); }
-        .error { background-color: var(--status-n-bg); color: var(--danger-color); }
-
-
-        .loading .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid var(--secondary-color);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 2. تنسيق الـ Toast Notification */
-        .toast-notification {
-            position: fixed;
-            top: 20px; 
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-        }
-        .toast-notification.show {
-            opacity: 1;
-        }
-        .toast-notification i {
-            margin-left: 10px;
-        }
-        
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-        .stats-card {
-            background: var(--accent-color);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .stats-card:hover {
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .stats-card.active-card {
-            background: #e6f7ff; 
-        }
-
-
-        .stats-card h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 16px; 
-            font-weight: 700;
-        }
-        
-        .card-title-icon {
-            margin-left: 8px;
-            color: var(--secondary-color);
-        }
-        .active-card .card-title-icon {
-            color: var(--success-color);
-        }
-
-
-        .stats-count {
-            font-size: 40px; 
-            font-weight: 900;
-            color: var(--secondary-color);
-            display: block;
-            margin-top: 5px;
-        }
-        
-        .stats-card.active-card .stats-count {
-             color: var(--success-color); 
-        }
-        
-        .referral-link-box {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px dashed var(--primary-color);
-            margin-top: 15px;
-            word-break: break-all;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .referral-link-box:hover {
-            background: #e6f7ff;
-        }
-        
-        .copy-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        .copy-btn:hover {
-            background: #1a5c24;
-        }
-        
-        .details-card {
-            border: 1px solid #ccc;
-            border-radius: 15px;
-            padding: 20px;
-            background: #fff;
-            margin-bottom: 20px;
-        }
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px dotted #eee;
-        }
-        .detail-item:last-child {
-            border-bottom: none;
-        }
-        .detail-item i {
-            color: var(--primary-color);
-            margin-left: 10px;
-            font-size: 16px;
-        }
-        .detail-label {
-            font-weight: 700;
-            color: var(--muted-color);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .detail-value {
-            font-weight: 600;
-            color: var(--text-color-dark);
-            font-size: 15px;
-            text-align: left;
-        }
-        /* التنسيقات المتعلقة بالجدول (مثل .table-container) ستنتقل إلى table-styles.css */
-    </style>
-</head>
-<body>
-
-<div class="dashboard-container">
-    <header>
-        <h1>لوحة تحكم المسوِّق</h1>
-        <p id="marketer-id-display">الرجاء إدخال المعرّف في الرابط</p>
-    </header>
-
-    <div class="content">
-        <div id="statusMessage" class="loading" style="text-align:center; color:#555;">
-            <span class="spinner"></span> جارٍ جلب البيانات...
-        </div>
-
-        <div id="dashboardContent" style="display:none;">
-        	
-        
-        
-        
-
-<script>
-  // 🔹 تحميل بطاقة الرصيد من الملف Balance.html داخل الـ div
-  fetch('Balance.html')
-    .then(response => response.text())
-    .then(html => {
-      document.getElementById('dashboardContent').innerHTML = html;
-
-      // بعد تحميل البطاقة، نظهر القسم
-      document.getElementById('dashboardContent').style.display = 'block';
-    })
-    .catch(error => {
-      console.error('فشل تحميل البطاقة:', error);
-    });
-</script>
-
-
-
-
-            
-            
-            
-            
-            
-            <div class="stats-card" style="margin-bottom: 20px;">
-                <h2 style="margin-top: 0;"><i class="fas fa-link card-title-icon"></i> رابط الإحالة الخاص بك</h2>
-                <div class="referral-link-box" id="referral-link-box" title="اضغط لنسخ الرابط">
-                    <span id="referral-link-text">...</span>
-                    <button class="copy-btn" id="copy-btn"><i class="fas fa-copy"></i> نسخ</button>
+                <div class="stats-grid">  
+                    <div class="stats-card">  
+                        <h2><i class="fas fa-users card-title-icon"></i> إجمالي عدد المسجّلين عبر الرابط الخاص بك</h2>  
+                        <span class="stats-count" id="referrals-count">0</span>  
+                    </div>  
+                    <div class="stats-card active-card">  
+                        <h2><i class="fas fa-check-circle card-title-icon"></i> المسجّلون النشطون (الحالة Y)</h2>  
+                        <span class="stats-count" id="active-referrals-count">0</span>  
+                    </div>  
+                </div>  
+                
+                <div class="card-wrapper" style="margin-bottom: 25px;">
+                    <iframe id="competition-card-iframe" src="Balance.html" 
+                            style="width: 100%; max-width: 420px; height: 580px; border: none; overflow: hidden; border-radius: 25px; margin: 0 auto; display: block;">
+                    </iframe>
                 </div>
-                <p style="font-size: 12px; color: #555; margin-top: 10px;">انقر على الرابط أو الزر لنسخه ومشاركته.</p>
-            </div>
+                
+                <div class="stats-card" style="margin-bottom: 20px;">  
+                    <h2 style="margin-top: 0;"><i class="fas fa-link card-title-icon"></i> رابط الإحالة الخاص بك</h2>  
+                    <div class="referral-link-box" id="referral-link-box" title="اضغط لنسخ الرابط">  
+                        <span id="referral-link-text">...</span>  
+                        <button class="copy-btn" id="copy-btn"><i class="fas fa-copy"></i> نسخ</button>  
+                    </div>  
+                    <p style="font-size: 12px; color: #555; margin-top: 10px;">انقر على الرابط أو الزر لنسخه ومشاركته.</p>  
+                </div>  
 
-            <h2 style="color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin-bottom: 20px;"><i class="fas fa-address-card card-title-icon"></i> البيانات الشخصية</h2>
-            <div class="details-card" id="personal-details">
-            </div>
+                <h2 style="color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin-bottom: 20px;"><i class="fas fa-address-card card-title-icon"></i> البيانات الشخصية</h2>  
+                <div class="details-card" id="personal-details">  
+                </div>  
 
-            <div class="referrals-section">
-                <div class="referrals-header">
-                    <div class="top-row">
-                        <h2 style="margin: 0; color: var(--primary-color); font-size: 18px; font-weight: 700;">قائمة المسجّلين عبر الرابط</h2>
-                        <button class="download-btn" id="download-btn" style="display:none;">
-                            <i class="fas fa-download" style="margin-left: 5px; color: var(--primary-color);"></i>
-                            تنزيل كملف CSV
-                        </button>
-                    </div>
-                    <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، البريد الإلكتروني..." oninput="filterReferrals()">
-                </div>
+                <div class="referrals-section">  
+                    <div class="referrals-header">  
+                        <div class="top-row">  
+                            <h2 style="margin: 0; color: var(--primary-color); font-size: 18px; font-weight: 700;">قائمة المسجّلين عبر الرابط</h2>  
+                            <button class="download-btn" id="download-btn" style="display:none;">  
+                                <i class="fas fa-download" style="margin-left: 5px; color: var(--primary-color);"></i>  
+                                تنزيل كملف CSV  
+                            </button>  
+                        </div>  
+                        <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، البريد الإلكتروني..." oninput="filterReferrals()">  
+                    </div>  
 
-                <div class="cards-container" id="referrals-table-container">
-                    </div>
-            </div>
-            
-            <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>
+                    <div class="cards-container" id="referrals-table-container">  
+                    </div>  
+                </div>  
+          
+                <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>  
 
+            </div>  
         </div>
-
-    </div>
-</div>
-
-<div id="toastNotification" class="toast-notification">
-    <i class="fas fa-check-circle"></i> تم نسخ الرابط إلى الحافظة!
-</div>
-<script src="marketer_tracker.js"></script> 
-<script src="table-logic.js"></script> 
-
-</body>
+    </div>  
+    <div id="toastNotification" class="toast-notification">  
+        <i class="fas fa-check-circle"></i> تم نسخ الرابط إلى الحافظة!  
+    </div>  
+    <script src="marketer_tracker.js"></script>   
+    <script src="table-logic.js"></script>   
+</body>  
 </html>
