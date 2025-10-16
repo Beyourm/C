@@ -1,117 +1,54 @@
 /* ---------------------------------------------------------------------- */
-/* **إعدادات الأساس والتجاوب (Base Setup & Global Responsiveness)** */
-/* ---------------------------------------------------------------------- */
-
-*,
-*::before,
-*::after {
-  /* لضمان عدم تجاوز العناصر لحجم الشاشة */
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* احترام إعدادات المستخدم لتقليل الحركة */
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* ---------------------------------------------------------------------- */
-/* **متغيرات CSS (Variables)** - تم تعديل لون النص الداكن لتحسين التباين */
+/* **متغيرات CSS (Variables)** */
 /* ---------------------------------------------------------------------- */
 :root {
   --primary-color: #0d3b14;
   --secondary-color: #e5a72d;
   --accent-color: #f7f3e9;
-  --text-color-dark: #3a3a3a; /* تم تحسين التباين */
+  --text-color-dark: #2d3748;
   --muted-color: #4a5568;
   --white-color: #ffffff;
-  /* استخدام clamp للتجاوب السائل في المسافات والحواف */
-  --spacing-base: clamp(15px, 4vw, 30px);
-  --border-radius-lg: clamp(10px, 2vw, 20px);
+  --border-radius-lg: 20px;
 }
-
-/* ---------------------------------------------------------------------- */
-/* **دعم الوضع الداكن (Dark Mode Support)** */
-/* ---------------------------------------------------------------------- */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-color: #55ac40;
-    --secondary-color: #e5a72d;
-    --accent-color: #333333;
-    --text-color-dark: #f1f1f1;
-    --muted-color: #a0aec0;
-    --white-color: #2b2b2b;
-  }
-  body {
-    background: linear-gradient(135deg, #1e1e1e 0%, #292929 100%);
-  }
-  .card {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  }
-  input, select {
-    background: #3a3a3a;
-    color: #f1f1f1;
-    border-color: #444;
-  }
-  .btn-decline { 
-    background: var(--accent-color); 
-    color: var(--primary-color); 
-    border: 1px solid var(--primary-color);
-  }
-}
-
 
 /* ---------------------------------------------------------------------- */
 /* **الرسوم المتحركة (Animations)** */
 /* ---------------------------------------------------------------------- */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-/* تعديل Animation: جعله أكثر سلاسة (كما اقترح المطور) */
-@keyframes fadeSlide { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes slideRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes slideLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes progress { 0% { width: 0; } 100% { width: 100%; } } 
-@keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* نمط خاص لجعل ايقونة التحميل (السبينر) تدور */
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 
 /* ---------------------------------------------------------------------- */
-/* **الأنماط الأساسية (Base Styles) - استخدام وحدات مرنة** */
+/* **الأنماط الأساسية (Base Styles)** */
 /* ---------------------------------------------------------------------- */
 body{
   font-family: "Tajawal", sans-serif;
   background: linear-gradient(135deg, #f0f4f9 0%, #e8eef5 100%); 
-  margin:0; 
-  /* استخدام clamp لمسافة أمان في جميع الأجهزة */
-  padding: clamp(10px, 5vw, 24px); 
+  margin:0; padding:24px;
   display:flex; justify-content:center; align-items:center;
   min-height:100vh; color: var(--text-color-dark);
 }
 
-.container{
-  /* تصحيح العرض العام للحاوية لتناسب جميع الشاشات */
-  width: min(95%, 900px); 
-}
+.container{width:100%;max-width:760px}
 .card{
   background:var(--white-color);
   border-radius:var(--border-radius-lg);
-  box-shadow:0 10px 30px rgba(0,0,0,0.15); /* تم تخفيف الظل قليلاً */
+  box-shadow:0 16px 50px rgba(0,0,0,0.15);
   overflow:hidden;
-  animation: fadeSlide 0.6s ease-out forwards; /* استخدام الأنيميشن المحسّن */
+  animation: fadeIn 0.6s ease-out forwards;
 }
+header{background: var(--primary-color);color:#fff;padding:30px;text-align:center;}
 
-header{background: var(--primary-color);color:#fff;padding:var(--spacing-base);text-align:center;}
-
-header h1{
-  margin:0;
-  /* استخدام clamp لتكيف حجم العنوان */
-  font-size: clamp(1.4rem, 3vw, 2rem); 
-  font-weight:900
-} 
-
-.content{padding:var(--spacing-base)}
-
+header h1{margin:0;font-size:28px;font-weight:900} 
+.content{padding:30px}
 
 /* ---------------------------------------------------------------------- */
 /* **أنماط التبديل بين النماذج (Tabs)** */
@@ -119,8 +56,7 @@ header h1{
 #actionSelector { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }
 .action-btn { 
   background: none; color: var(--primary-color); border: 2px solid var(--primary-color); 
-  padding: clamp(8px, 2.5vw, 10px) clamp(15px, 4vw, 20px); /* مرونة في الحجم */
-  border-radius: 12px; font-weight: 700; opacity: 0.7; cursor:pointer; 
+  padding: 10px 20px; border-radius: 12px; font-weight: 700; opacity: 0.7; cursor:pointer; 
   transition: all 0.3s ease; 
 }
 .action-btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -138,7 +74,7 @@ header h1{
 /* ---------------------------------------------------------------------- */
 /* **أنماط الشروط والتسجيل (Terms & Signup)** */
 /* ---------------------------------------------------------------------- */
-.terms{max-height:420px; overflow:auto; padding:clamp(15px, 3vw, 20px); border-radius:var(--border-radius-lg); background:var(--accent-color); border:1px solid rgba(13, 59, 20, 0.1);}
+.terms{max-height:420px; overflow:auto; padding:20px; border-radius:15px; background:var(--accent-color); border:1px solid rgba(13, 59, 20, 0.1);}
 .terms::-webkit-scrollbar { width: 6px; }
 .terms::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 10px; }
 .terms::-webkit-scrollbar-track { background-color: #ddd; }
@@ -168,22 +104,11 @@ header h1{
 }
 
 /* ---------------------------------------------------------------------- */
-/* **أنماط الأزرار وحالة التحميل (Buttons & Loading State) - إضافة focus-visible** */
+/* **أنماط الأزرار وحالة التحميل (Buttons & Loading State)** */
 /* ---------------------------------------------------------------------- */
-button { 
-  cursor:pointer; border:0; font-weight:700; transition: all 0.3s ease; 
-  padding:clamp(10px, 2.5vw, 14px) clamp(15px, 3vw, 25px); /* مرونة في الحجم */
-  border-radius:15px; 
-  font-size: clamp(14px, 2.5vw, 17px); /* مرونة في الخط */
-}
+button { cursor:pointer; border:0; font-weight:700; transition: all 0.3s ease; padding:12px 20px; border-radius:15px; }
 button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
 button:active { transform: translateY(1px) scale(0.98); }
-
-/* تأثير التركيز فقط عند استخدام لوحة المفاتيح */
-button:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid var(--secondary-color);
-  outline-offset: 3px;
-}
 
 .btn-accept { 
   background: linear-gradient(135deg, #1a5c24, #0d3b14); 
@@ -206,19 +131,21 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .btn-accept:disabled.loading,
 .btn-decline:disabled.loading,
 #verifyOtpBtn:disabled.loading {
+    /* تغيير بسيط في لون الخلفية للإشارة إلى حالة التوقف/الانتظار */
     opacity: 0.8;
-    cursor: wait; 
-    background-color: var(--primary-color); 
+    cursor: wait; /* تغيير مؤشر الماوس */
+    background-color: var(--primary-color); /* إبقاء اللون الأساسي ولكن مع التعتيم */
 }
 
+/* نمط أيقونة التحميل داخل الزر */
 .fa-spin {
     display: inline-block;
     animation: fa-spin 1s infinite linear;
-    margin-left: 5px; 
+    margin-left: 5px; /* مسافة بين الأيقونة والنص */
 }
 
 .btn-decline { background:var(--accent-color); color:var(--primary-color); border: 1px solid var(--primary-color); }
-#backBtn { padding: clamp(10px, 2.5vw, 14px) clamp(15px, 3vw, 25px); display: flex; align-items: center; gap: 8px; }
+#backBtn { padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
 #backBtn i { font-size: 16px; margin-right: 5px; }
 
 
@@ -226,12 +153,6 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 /* **أنماط النموذج العام (Form Layout)** */
 /* ---------------------------------------------------------------------- */
 .actions { display:flex; align-items:center; gap:10px; margin-top:20px; flex-wrap: wrap; }
-/* جعل الأزرار تأخذ حيزاً أكبر في الشاشات الصغيرة */
-@media (max-width: 480px) {
-  .actions button {
-    flex: 1 1 100%;
-  }
-}
 form{display:block; padding:20px 0; border-top:1px solid #eef2f7;}
 #loginForm { border-top: none; }
 #signupForm { display: none; padding-top:0; }
@@ -240,13 +161,6 @@ form{display:block; padding:20px 0; border-top:1px solid #eef2f7;}
 form h3{color:var(--secondary-color); font-size: 20px; font-weight: 800;} 
 
 .row{display:flex; gap:15px; margin-bottom:15px;}
-/* تكديس الحقول عمودياً في الشاشات الأقل من 900 بكسل */
-@media (max-width: 900px) {
-  .row {
-    flex-direction: column;
-    gap: 18px;
-  }
-}
 .col{flex:1; position: relative;}
 label{display:block;font-size:14px;color:var(--muted-color);margin-bottom:6px;}
 
@@ -275,19 +189,12 @@ label{display:block;font-size:14px;color:var(--muted-color);margin-bottom:6px;}
 }
 .toggle-password:hover { color: var(--primary-color); }
 
-
-input,select{
-  /* استخدام clamp للتحكم في الحجم والتجاوب */
-  width:100%; 
-  padding: clamp(10px, 3vw, 16px) clamp(35px, 5vw, 45px) clamp(10px, 3vw, 16px) 15px;
-  border-radius:15px; border:1px solid #e6eef8; background:#fff; 
-  font-size: clamp(14px, 2vw, 16px); 
-  transition:border-color 0.3s, background-color 0.3s; 
-}
-input:focus, select:focus{border-color:var(--primary-color); background-color: var(--accent-color); outline:none; box-shadow:none;}
 input:valid:not(:placeholder-shown):not([type="password"]) { border-color: #1a5c24; }
 input:invalid:not(:placeholder-shown):not([type="password"]) { border-color: #721c24; }
 
+
+input,select{width:100%; padding:14px 40px 14px 40px; border-radius:15px; border:1px solid #e6eef8; background:#fff; font-size:15px; transition:border-color 0.3s, background-color 0.3s; }
+input:focus, select:focus{border-color:var(--primary-color); background-color: var(--accent-color); outline:none; box-shadow:none;}
 
 .note{font-size:13px;color:var(--muted-color);margin-top:15px}
 
@@ -331,7 +238,7 @@ input:invalid:not(:placeholder-shown):not([type="password"]) { border-color: #72
 
 
 /* ---------------------------------------------------------------------- */
-/* **أنماط رمز التحقق لمرة واحدة (OTP) - تم تحسين التجاوب** */
+/* **أنماط رمز التحقق لمرة واحدة (OTP)** */
 /* ---------------------------------------------------------------------- */
 
 #otpInputContainer {
@@ -341,20 +248,20 @@ input:invalid:not(:placeholder-shown):not([type="password"]) { border-color: #72
     display: flex;
     flex-direction: column; 
     align-items: center;
-    width: 100%; 
+    width: 100%; /* تأكد من أنه يملأ المساحة المتاحة */
 }
 
 #otpCode {
     text-align: center; 
-    font-size: clamp(1rem, 2.5vw, 1.2rem); /* حجم متكيف */
-    letter-spacing: clamp(0.3rem, 1vw, 0.5rem); /* تباعد متكيف */
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem; 
     font-weight: bold;
     color: var(--primary-color);
     border: 2px solid var(--secondary-color); 
     border-radius: 8px;
     padding: 10px 15px;
     width: 100%;
-    max-width: 250px; /* تحديد أقصى عرض */
+    max-width: 250px; 
     transition: border-color 0.3s;
 }
 
@@ -369,25 +276,166 @@ input:invalid:not(:placeholder-shown):not([type="password"]) { border-color: #72
 }
 
 #verifyOtpBtn {
+    /* تطبيق أنماط الأزرار العامة */
     background: linear-gradient(135deg, #1a5c24, #0d3b14); 
     color: var(--white-color);
     border: none;
-    border-radius: 15px; 
+    border-radius: 15px; /* للحفاظ على التناسق مع الأزرار الأخرى */
     font-size: 1rem;
     padding: 12px 20px;
     margin-top: 15px;
 }
+/* تم دمج أنماط :hover و :disabled مع أنماط الأزرار العامة في الأعلى */
+
 
 
 /* ---------------------------------------------------------------------- */
-/* **تعديلات شاشات الجوال (Media Queries)** - تم دمج قواعد الشاشات الصغيرة */
+/* **تعديلات شاشات الجوال (Media Queries)** */
 /* ---------------------------------------------------------------------- */
-
 @media (max-width:600px){
-  /* تخفيف الظل في الشاشات الصغيرة لتحسين الأداء */
-  .card { 
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
+  .container { 
+      width: 95%; 
+      max-width: none; 
   }
+  .row{flex-direction:column; gap: 20px;} 
+  input, select { padding:18px 45px 18px 45px; font-size:16px; } 
+  .content { padding: 20px; }
+  button { padding: 14px 25px; font-size: 16px; }
+  #backBtn { padding: 14px 20px; }
   .decorator-icon { right: 15px; } 
   .toggle-password { left: 15px; } 
+  #otpCode { max-width: 200px; padding: 12px 10px; font-size: 1.1rem; }
+}
+
+
+/* ===== تحسين التجاوب العام ===== */
+body {
+  margin: 0;
+  font-family: 'Tajawal', sans-serif;
+  background-color: #f7f9fc;
+}
+
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+
+/* ===== النماذج ===== */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.col {
+  flex: 1;
+  min-width: 250px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  padding: 10px 35px 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.decorator-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+/* ===== أزرار ===== */
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.btn-accept {
+  background-color: var(--primary-color, #006f57);
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.btn-decline {
+  background-color: #ddd;
+  color: #333;
+  padding: 10px 20px;
+}
+
+/* ===== تجاوب الهواتف ===== */
+@media (max-width: 768px) {
+  .card {
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  h1, h3 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col {
+    min-width: 100%;
+  }
+
+  input, select, button {
+    font-size: 16px;
+  }
+
+  #actionSelector {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #copyButtonContainer {
+    flex-direction: column;
+  }
+
+  .copy-link-container input {
+    font-size: 14px;
+  }
+
+  .copy-link-container button {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 16px;
+  }
+
+  .btn-accept,
+  .btn-decline {
+    width: 100%;
+    padding: 12px;
+  }
+
+  input, select {
+    padding: 12px 35px 12px 12px;
+  }
 }
