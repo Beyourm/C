@@ -161,6 +161,8 @@
                   </div>
                 </div>
               </div>
+              <input type="hidden" id="marketer_id_input" name="marketer_id_referrer" value="">
+              
               <div style="display:flex;gap:10px;align-items:center;margin-top:15px">
                 <button type="submit" class="btn-accept" id="submitBtn" disabled>إرسال وتسجيل</button>
                 <button type="button" class="btn-decline" id="backBtn"><i class="fa-solid fa-arrow-right"></i>العودة للشروط</button>
@@ -175,6 +177,7 @@
   </div>
 
   <script src="url.js"></script> 
+ <script src="marketer_tracker.js"></script>   
   <script>
     // ----------------------------------------------------------------------
     // الثوابت والعناصر العامة
@@ -337,33 +340,21 @@
       submitBtn.disabled = true;
     });
 
-    // ****** دالة عرض الترحيب المُعدّلة لإعادة التوجيه ******
+    // ****** دالة عرض الترحيب المُعدّلة لإعادة التوجيه مع تمرير Marketer ID ******
     function showWelcome(data){
       // 1. تخزين بيانات الجلسة (مهم لصفحة home.html)
       localStorage.setItem(MARKETER_SESSION_KEY, JSON.stringify(data));
       
-      // 2. إعادة التوجيه إلى صفحة التحكم (home.html)
-      window.location.href = 'home.html';
-
-      // ملاحظة: الأكواد التالية متبقية هنا لتجنب الحذف، لكنها لن تنفذ بسبب إعادة التوجيه الفوري
-      /*
-      const marketerNameDisplay = document.getElementById('marketerNameDisplay');
-      const marketerIdDisplay = document.getElementById('marketerIdDisplay');
-      const affiliateLinkDisplay = document.getElementById('affiliateLinkDisplay');
+      // 2. بناء رابط الإحالة لصفحة home.html لتمرير المعرّف
+      const homeUrl = new URL('home.html', window.location.href);
+      if (data.marketer_id) {
+        homeUrl.searchParams.set('marketer_id', data.marketer_id);
+      }
       
-      welcomeLoggedIn.style.display = 'block';
-      loginWrapper.style.display = 'none';
-      registerWrapper.style.display = 'none';
-      
-      marketerNameDisplay.textContent = data.fullname || 'عزيزي المسوق'; 
-      marketerIdDisplay.textContent = data.marketer_id;
-      affiliateLinkDisplay.value = data.affiliate_link;
-      
-      loginErrorBox.classList.remove('show');
-      hideOtpInput();
-      */
+      // 3. إعادة التوجيه إلى صفحة التحكم (home.html) مع المعرّف
+      window.location.href = homeUrl.toString();
     }
-    // *******************************************************
+    // **************************************************************************
     
     // ----------------------------------------------------------------------
     // دوال مساعدة لتدفق OTP
@@ -490,6 +481,8 @@
       const email = document.getElementById('email');
       const password = document.getElementById('password').value.trim();
       const confirmPassword = document.getElementById('confirmPassword').value.trim();
+      // استخراج قيمة المُحيل من الحقل المخفي
+      const referrerMarketerId = document.getElementById('marketer_id_input').value.trim(); 
 
       signupErrorBox.classList.remove('show');
       successBox.classList.remove('show');
@@ -509,7 +502,17 @@
       setLoadingState(submitBtn, 'جاري إنشاء الحساب...');
       // *******************************
       
-      const formData = { fullname, gender, country, phone: phone.value.trim(), email: email.value.trim(), password };
+      const formData = { 
+          fullname, 
+          gender, 
+          country, 
+          phone: phone.value.trim(), 
+          email: email.value.trim(), 
+          password,
+          // إضافة المعرّف المُحال (إن وجد)
+          referrer_id: referrerMarketerId 
+      };
+      
       const result = await sendDataToScript('register', formData);
       
       // ****** إزالة حالة التحميل في كل المسارات ******
@@ -548,10 +551,17 @@
         }
     });
 
-    // نسخ رابط الإحالة
+    // ****** دالة نسخ رابط الإحالة المُعدّلة (إضافة تغيير الأيقونة) ******
     function copyAffiliateLink(input){
       input.select();
       input.setSelectionRange(0, 99999);
+      
+      const copyButton = document.getElementById('copyButton');
+      const originalIcon = copyButton.innerHTML; // حفظ الأيقونة الأصلية
+      
+      // تغيير الأيقونة إلى علامة صح
+      copyButton.innerHTML = '<i class="fa-solid fa-check"></i>';
+      
       navigator.clipboard.writeText(input.value).then(() => {
         const msg = document.getElementById('copyMessage');
         msg.style.opacity = 1;
@@ -559,9 +569,12 @@
         setTimeout(()=>{ 
           msg.style.opacity=0; 
           msg.style.transform = 'translate(-50%, -100%)';
+          // إعادة الأيقونة الأصلية بعد انتهاء رسالة النجاح
+          copyButton.innerHTML = originalIcon; 
         }, 1500);
       });
     }
+    // ********************************************************************
 
     // ملء قائمة الدول 
     const countries = [    "فلسطين", "الأردن", "سوريا", "العراق", "لبنان", "مصر", "السودان", "ليبيا", "تونس", "الجزائر", "المغرب", "موريتانيا", "الصومال", "جيبوتي", "جزر القمر", "السعودية", "اليمن", "الإمارات", "الكويت", "البحرين", "قطر", "سلطنة عمان"];
@@ -577,6 +590,8 @@
     logoutBtn.addEventListener('click', ()=>{
       localStorage.removeItem(DEVICE_SERIAL_KEY); 
       localStorage.removeItem(MARKETER_SESSION_KEY); 
+      // إزالة stored_marketer_id أيضاً لتنظيف الجلسة تماماً
+      localStorage.removeItem('stored_marketer_id'); 
       location.reload(); 
     });
 
@@ -591,8 +606,8 @@
               const data = JSON.parse(sessionData);
               // التحقق من وجود البيانات الأساسية قبل إعادة التوجيه
               if(data.marketer_id && data.affiliate_link){
-                 // إعادة التوجيه الفوري بدلاً من عرض واجهة الترحيب في index.html
-                 window.location.href = 'home.html';
+                 // إعادة التوجيه الفوري باستخدام الدالة الجديدة
+                 showWelcome(data);
               } else {
                  localStorage.removeItem(MARKETER_SESSION_KEY); // مسح البيانات الناقصة
               }
