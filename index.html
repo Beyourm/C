@@ -81,7 +81,7 @@
             </form>
         </div>
 
-        <div <div id="registerWrapper" class="form-wrapper" style="display: none;">
+        <div id="registerWrapper" class="form-wrapper" style="display: none;">
 
             <div id="termsSection">
               <div class="terms">
@@ -433,14 +433,21 @@
     }
 
     // ----------------------------------------------------------------------
-    // معالجة تسجيل الدخول المحدثة
+    // معالجة تسجيل الدخول المُعدّلة (لضمان إرسال البريد وكلمة المرور)
     loginForm.addEventListener('submit', async e=>{
       e.preventDefault();
       
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       
-      // حفظ البيانات مؤقتًا
+      // ****** التحقق من عدم فراغ الحقول في الواجهة الأمامية (جديد) ******
+      if (!email || !password) {
+          showMessage(loginErrorBox, 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.');
+          return;
+      }
+      // ***************************************************************
+      
+      // حفظ البيانات مؤقتًا (فقط لاستخدامها لاحقاً في OTP)
       pendingLoginData = { email, password }; 
 
       // ****** تفعيل حالة التحميل ******
@@ -450,7 +457,10 @@
       loginErrorBox.classList.remove('show');
       hideOtpInput(); // إخفاء حقل OTP في بداية محاولة الدخول
 
-      const result = await sendDataToScript('login', pendingLoginData);
+      // الإرسال مع دمج البيانات المطلوبة مباشرة
+      const formDataToSend = { email, password };
+
+      const result = await sendDataToScript('login', formDataToSend);
       
       // ****** إزالة حالة التحميل في كل المسارات ******
       resetButton(loginSubmitBtn);
@@ -458,7 +468,7 @@
 
       if(result.success){
         // تسجيل الدخول الناجح (جهاز معروف)
-        showWelcome(result); // ****** الآن يتم التوجيه إلى home.html ******
+        showWelcome(result); 
       } else if (result.require_otp) {
         // حالة الجهاز الجديد: طلب رمز OTP
         showMessage(loginErrorBox, result.message, 5000);
