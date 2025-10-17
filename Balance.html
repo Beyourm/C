@@ -187,7 +187,8 @@ button:hover { background: #005f63; }
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi5fVMNBLAh_6jTMRs2vptnbjOPUj8_IumUHfZjslI_1UHv6zqCGdKermTw_tZDGQV/exec';
 const params = new URLSearchParams(window.location.search);
-const marketerId = params.get('marketer_id') || 'TTTTTT11';
+const marketerId = params.get('marketer_id'); 
+
 
 function showToast(msg, isError=false) {
   const toast = document.getElementById('toast');
