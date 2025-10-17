@@ -308,7 +308,7 @@ input:focus, select:focus{border-color:var(--primary-color); background-color: v
 }
 
 
-/* ===== تحسين التجاوب العام ===== */
+/* ===== تحسين التجاوب العام (من الكود الأصلي) ===== */
 body {
   margin: 0;
   font-family: 'Tajawal', sans-serif;
@@ -316,7 +316,7 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 900px; /* هذا يوسع الـ max-width إلى 900px للشاشات الكبيرة */
   margin: 20px auto;
   padding: 15px;
 }
@@ -337,7 +337,7 @@ body {
 
 .col {
   flex: 1;
-  min-width: 250px;
+  min-width: 250px; /* يضمن عدم تكسير الأعمدة حتى 250px كحد أدنى */
 }
 
 .input-wrapper {
@@ -381,7 +381,7 @@ button {
   padding: 10px 20px;
 }
 
-/* ===== تجاوب الهواتف ===== */
+/* ===== تجاوب الهواتف (Media Queries) ===== */
 @media (max-width: 768px) {
   .card {
     padding: 15px;
@@ -394,11 +394,11 @@ button {
   }
 
   .row {
-    flex-direction: column;
+    flex-direction: column; /* تحويل الصفوف إلى أعمدة مفردة */
   }
 
   .col {
-    min-width: 100%;
+    min-width: 100%; /* جعل كل عمود يأخذ عرض الشاشة بالكامل */
   }
 
   input, select, button {
@@ -406,12 +406,12 @@ button {
   }
 
   #actionSelector {
-    flex-direction: column;
+    flex-direction: column; /* تحويل أزرار التبديل إلى أعمدة */
     gap: 10px;
   }
 
   #copyButtonContainer {
-    flex-direction: column;
+    flex-direction: column; /* ضبط حاوية النسخ */
   }
 
   .copy-link-container input {
@@ -419,7 +419,7 @@ button {
   }
 
   .copy-link-container button {
-    width: 100%;
+    width: 100%; /* جعل زر النسخ يأخذ عرض الحاوية */
     margin-top: 8px;
   }
 }
@@ -431,7 +431,7 @@ button {
 
   .btn-accept,
   .btn-decline {
-    width: 100%;
+    width: 100%; /* جعل الأزرار تأخذ عرض الشاشة بالكامل */
     padding: 12px;
   }
 
