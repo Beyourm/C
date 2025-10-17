@@ -1,1 +1,1 @@
-const URL_LONG = "https://script.google.com/macros/s/AKfycbyYOKcDd23gO080lFgeAozKDRABnTVaGETW8c69priQ8spTopQRGuz52fCJ_8U97mI/exec";
+const URL_LONG = "https://script.google.com/macros/s/AKfycbwA-zvh4dqlvCAdLgCBbly66xvBnAucRx_LVwRoFgv7tOAPHD14L-NUuBGvBa47xzKA/exec";
