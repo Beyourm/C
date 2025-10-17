@@ -186,9 +186,25 @@ button:hover { background: #005f63; }
 
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi5fVMNBLAh_6jTMRs2vptnbjOPUj8_IumUHfZjslI_1UHv6zqCGdKermTw_tZDGQV/exec';
-const params = new URLSearchParams(window.location.search);
+// 🔹 محاولة الحصول على المعرّف من الرابط أو من localStorage
+let marketerId = null;
 
-const marketerId = params.get('marketer_id'); 
+// 1. من الرابط
+const params = new URLSearchParams(window.location.search);
+marketerId = params.get('marketer_id');
+
+// 2. من localStorage إذا لم يوجد في الرابط
+if (!marketerId) {
+  marketerId = localStorage.getItem('stored_marketer_id');
+  if (marketerId) {
+    console.log('تم استرجاع المعرف من localStorage:', marketerId);
+  }
+}
+
+// 3. في حال عدم وجوده نهائيًا
+if (!marketerId) {
+  console.warn('⚠️ لا يوجد معرف في الرابط أو التخزين المحلي.');
+}
 
 function showToast(msg, isError=false) {
   const toast = document.getElementById('toast');
