@@ -187,8 +187,8 @@ button:hover { background: #005f63; }
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi5fVMNBLAh_6jTMRs2vptnbjOPUj8_IumUHfZjslI_1UHv6zqCGdKermTw_tZDGQV/exec';
 const params = new URLSearchParams(window.location.search);
-const marketerId = params.get('marketer_id'); 
 
+const marketerId = params.get('marketer_id'); 
 
 function showToast(msg, isError=false) {
   const toast = document.getElementById('toast');
@@ -198,7 +198,7 @@ function showToast(msg, isError=false) {
   setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-async function fetchStats(id) {
+/*async function fetchStats(id) {
   try {
     const res = await fetch(`${APPS_SCRIPT_URL}?marketer_id=${encodeURIComponent(id)}`);
     const data = await res.json();
@@ -210,6 +210,39 @@ async function fetchStats(id) {
     return null;
   }
 }
+*/
+
+async function fetchStats(id) {
+  try {
+    const res = await fetch(`${APPS_SCRIPT_URL}?marketer_id=${encodeURIComponent(id)}`);
+    const data = await res.json();
+    
+    // ⛔️ إذا كان هناك خطأ في البيانات القادمة من الخادم (مثل: success: false)
+    if (data.success === false) {
+      // إظهار رسالة الخطأ المباشرة من Apps Script ثم التوقف
+      showToast('خطأ من الخادم: ' + data.message + ' ❌', true); 
+      return null;
+    }
+    
+    // إذا كان هناك خطأ (error) في الحقل وليس (success: false)
+    if (data.error) {
+        showToast('خطأ من الخادم: ' + data.error + ' ❌', true);
+        return null;
+    }
+    
+    return data;
+    
+  } catch(err) {
+    showToast('فشل الاتصال: تحقق من اتصالك أو رابط التطبيق ❌', true);
+    console.error(err);
+    return null;
+  }
+}
+
+
+
+
+
 
 function updateUI(stats) {
   if (!stats) return;
@@ -238,11 +271,30 @@ function updateUI(stats) {
 }
 
 async function initDisplay() {
+    
+  // ⛔️ التحقق من وجود المعرّف (هذا هو الجزء المفقود)
+  if (!marketerId) {
+    const balanceElement = document.getElementById('current-balance');
+    balanceElement.textContent = '⚠️ المعرف مفقود';
+    balanceElement.style.fontSize = '1.8rem';
+    // مسح باقي الحقول لمنع ظهور بيانات غير منطقية
+    document.getElementById('total-members').textContent = '0';
+    document.getElementById('active-members').textContent = '0';
+    document.getElementById('inactive-members').textContent = '0';
+    document.getElementById('current-rank').textContent = 'غير محدد';
+    document.getElementById('top3-list').innerHTML = '<li>--</li><li>--</li><li>--</li>';
+    showToast('خطأ: الرجاء تحديد معرف المسوق في الرابط ❌', true);
+    return;
+  }
+    
+  // الاستمرار في العملية العادية إذا كان المعرف موجودًا
   document.getElementById('current-balance').innerHTML = '<div class="loader"></div>';
+  
   const stats = await fetchStats(marketerId);
   updateUI(stats);
   if (stats) showToast('تم تحديث البيانات بنجاح ✅');
 }
+
 
 document.getElementById('refresh-balance').addEventListener('click', initDisplay);
 initDisplay();
