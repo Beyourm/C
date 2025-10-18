@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سحب العمولات - لوحة تحكم المسوّق</title>
+<link rel="stylesheet" href="../assets/fonts/tajawal.css">
+<style>
+/* ===============================
+   CSS المخصص للبطاقة (مأخوذ من الملف السابق مع تعديلات بسيطة)
+   =============================== */
+:root {
+  --primary-color: #0d3b14; /* تم تغيير اللون الأساسي ليتناسب مع لوحة التحكم الأصلية */
+  --secondary-color: #e5a72d; /* لون ثانوي من لوحة التحكم الأصلية */
+  --accent-color: #f7f3e9; 
+  --text-color-dark: #2d3748;
+  --danger-color: #dc3545;
+  --white-color: #ffffff; 
+  --success-color: #28a745;
+  --status-pending-bg: #fff8e8; /* أصفر/برتقالي */
+}
+body {
+  font-family: "Tajawal", sans-serif;
+  background: linear-gradient(120deg, var(--accent-color) 0%, #eaf0f5 100%); 
+  margin: 0; padding: 20px;
+  min-height: 100vh;
+  display: flex; justify-content: center; align-items: flex-start;
+  color: var(--text-color-dark);
+}
+
+.card-wrapper {
+  width: 100%;
+  max-width: 600px; /* تصغير حجم البطاقة لتناسب نموذج السحب */
+  margin-top: 50px;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffffff, var(--accent-color));
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.card-title {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  border-bottom: 3px solid var(--secondary-color);
+  padding-bottom: 10px;
+}
+
+.balance-display {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--success-color);
+  margin-bottom: 25px;
+  background-color: #e6ffed;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.balance-display span {
+    margin-right: 10px;
+}
+
+/* تنسيق نموذج السحب */
+.withdrawal-form {
+    text-align: right;
+    margin-top: 30px;
+}
+.withdrawal-form label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+    font-size: 15px;
+}
+.withdrawal-form input[type="number"],
+.withdrawal-form input[type="text"],
+.withdrawal-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: "Tajawal", sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+.withdrawal-form select {
+    appearance: none;
+    background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230d3b14%22%20d%3D%22M287%2069.4L146.2%20208.7L5.4%2069.4H287z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 10px center;
+    background-size: 12px;
+    padding-left: 35px; /* مساحة للأيقونة */
+}
+
+button.submit-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+    font-weight: 700;
+}
+button.submit-btn:hover { background: #1a5c24; }
+button.submit-btn:active { transform: scale(0.99); }
+button.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* تنسيق سجل السحوبات */
+.history-section {
+    margin-top: 40px;
+    text-align: right;
+}
+.history-section h3 {
+    color: var(--primary-color);
+    border-bottom: 2px dashed #eee;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.withdrawal-record {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.record-details {
+    text-align: right;
+}
+.record-details strong {
+    color: var(--text-color-dark);
+}
+.record-date {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-top: 4px;
+}
+
+.status-badge {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    color: white;
+}
+.status-badge.paid { background-color: var(--success-color); }
+.status-badge.pending { background-color: var(--secondary-color); }
+.status-badge.rejected { background-color: var(--danger-color); }
+
+
+/* Spinner و Toast (كما كانت في الكود السابق) */
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--secondary-color);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+.toast i { margin-left: 8px; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="card-wrapper">
+  <div class="card">
+    <h2 class="card-title">طلب سحب العمولات</h2>
+    
+    <div class="balance-display">
+      <span id="available-balance"><div class="loader"></div></span>
+      <span style="font-size: 0.8em; font-weight: normal; color: #555;">(رصيد السحب المتاح)</span>
+    </div>
+    
+    <p style="font-size: 14px; color: var(--danger-color); font-weight: 600;">⚠️ الحد الأدنى للسحب: 50.00 $</p>
+
+    <div class="withdrawal-form">
+      <label for="withdrawal-amount">المبلغ المراد سحبه ($):</label>
+      <input type="number" id="withdrawal-amount" placeholder="أدخل مبلغاً لا يقل عن 50" min="50" step="1" required>
+
+      <label for="payment-method">طريقة الدفع (المحفظة/الحساب):</label>
+      <select id="payment-method" required>
+        <option value="">-- اختر أو أدخل طريقة الدفع --</option>
+        <option value="البنك الأهلي - رقم كذا">البنك الأهلي</option>
+        <option value="محفظة كاش - رقم كذا">محفظة كاش</option>
+        <option value="PayPal">PayPal</option>
+        <option value="Other">أخرى (سيتم طلب التفاصيل لاحقاً)</option>
+      </select>
+      
+      <label for="payment-details" id="details-label" style="display:none;">تفاصيل الدفع (الرقم/الحساب):</label>
+      <input type="text" id="payment-details" placeholder="أدخل رقم الحساب أو المحفظة" style="display:none;" required>
+      
+      <button class="submit-btn" id="submit-withdrawal" disabled>
+        <i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال طلب السحب
+      </button>
+    </div>
+
+    <div class="history-section">
+      <h3>سجل طلبات السحب الأخيرة</h3>
+      <div id="withdrawal-history">
+        <p style="text-align: center; color: #777;">جارٍ تحميل السجل...</p>
+      </div>
+      <p style="font-size: 12px; color: #888; margin-top: 15px;">سيتم معالجة الطلبات خلال 3 أيام عمل.</p>
+    </div>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script>
+// ----------------------------------------------------------------------
+// منطق JavaScript لصفحة سحب العمولات
+// ----------------------------------------------------------------------
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEM0tmTBT4p7OymU0aw-F2FFU3nPFtl3e7-wkGb7NUjBSQ7KPZduaY323gD53C4bHN/exec'; // يجب تغيير هذا الرابط
+let marketerId = localStorage.getItem('stored_marketer_id'); // الاعتماد على المعرف المخزن
+
+const balanceEl = document.getElementById('available-balance');
+const amountInput = document.getElementById('withdrawal-amount');
+const methodSelect = document.getElementById('payment-method');
+const detailsInput = document.getElementById('payment-details');
+const detailsLabel = document.getElementById('details-label');
+const submitBtn = document.getElementById('submit-withdrawal');
+const historyContainer = document.getElementById('withdrawal-history');
+
+let availableBalance = 0; // سيتم تحديثه من الخادم
+
+function showToast(msg, isError=false) {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = `<i class="fas ${isError ? 'fa-times-circle' : 'fa-check-circle'}"></i> ${msg}`;
+  toast.style.background = isError ? 'var(--danger-color)' : 'var(--primary-color)';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// 1. عرض حقل التفاصيل إذا تم اختيار طريقة دفع تحتاج لتفاصيل
+methodSelect.addEventListener('change', () => {
+    if (methodSelect.value === 'Other') {
+        detailsInput.style.display = 'block';
+        detailsLabel.style.display = 'block';
+        detailsInput.required = true;
+    } else {
+        detailsInput.style.display = 'none';
+        detailsLabel.style.display = 'none';
+        detailsInput.required = false;
+        detailsInput.value = ''; // مسح القيمة لضمان عدم إرسال بيانات خاطئة
+    }
+    checkFormValidity();
+});
+
+// 2. التحقق من صلاحية النموذج
+function checkFormValidity() {
+    const amount = Number(amountInput.value);
+    const method = methodSelect.value;
+    const details = detailsInput.value;
+    const isDetailsRequired = detailsInput.style.display === 'block';
+
+    const isValid = marketerId && 
+                    amount >= 50 && 
+                    amount <= availableBalance && 
+                    method !== '' && 
+                    (!isDetailsRequired || (isDetailsRequired && details.trim() !== ''));
+    
+    submitBtn.disabled = !isValid;
+}
+amountInput.addEventListener('input', checkFormValidity);
+detailsInput.addEventListener('input', checkFormValidity);
+
+
+// 3. جلب الرصيد والسجل من الخادم
+async function fetchWithdrawalData() {
+    if (!marketerId) {
+        balanceEl.textContent = 'المعرف مفقود';
+        historyContainer.innerHTML = '<p style="text-align: center; color: var(--danger-color);">الرجاء تسجيل الدخول أولاً.</p>';
+        return;
+    }
+    
+    balanceEl.innerHTML = '<div class="loader"></div>';
+    historyContainer.innerHTML = '<p style="text-align: center; color: #777;">جارٍ تحميل السجل...</p>';
+
+    try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?action=get_data&marketer_id=${encodeURIComponent(marketerId)}`);
+        const data = await res.json();
+        
+        if (data.success && data.balance !== undefined) {
+            availableBalance = Number(data.balance);
+            balanceEl.textContent = availableBalance.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+            renderHistory(data.history || []);
+            checkFormValidity();
+            showToast('تم تحديث الرصيد والسجل بنجاح ✅');
+        } else {
+            throw new Error(data.message || 'فشل جلب البيانات.');
+        }
+        
+    } catch(err) {
+        balanceEl.textContent = 'خطأ في التحميل!';
+        showToast('فشل جلب بيانات السحب ❌', true);
+        console.error('Fetch error:', err);
+    }
+}
+
+// 4. عرض سجل السحوبات
+function renderHistory(history) {
+    if (history.length === 0) {
+        historyContainer.innerHTML = '<p style="text-align: center; color: #777;">لا يوجد سجل سحوبات بعد.</p>';
+        return;
+    }
+    
+    historyContainer.innerHTML = '';
+    history.sort((a, b) => new Date(b.date) - new Date(a.date)); // ترتيب حسب التاريخ (الأحدث أولاً)
+
+    history.forEach(record => {
+        let statusClass = '';
+        let statusText = '';
+        
+        if (record.status === 'Paid') {
+            statusClass = 'paid';
+            statusText = 'تم الدفع';
+        } else if (record.status === 'Rejected') {
+            statusClass = 'rejected';
+            statusText = 'مرفوض';
+        } else {
+            statusClass = 'pending';
+            statusText = 'قيد المراجعة';
+        }
+
+        const detailsText = record.paymentDetails && record.paymentDetails.length > 10 
+                            ? record.paymentDetails.substring(0, 10) + '...' 
+                            : record.paymentDetails || record.method;
+
+        const recordDiv = `
+            <div class="withdrawal-record">
+                <div class="record-details">
+                    <strong>${Number(record.amount).toLocaleString('en-US', {minimumFractionDigits: 2})} $</strong>
+                    <div class="record-date">عبر: ${detailsText} - بتاريخ: ${new Date(record.date).toLocaleDateString('ar-EG')}</div>
+                </div>
+                <div class="status-badge ${statusClass}">${statusText}</div>
+            </div>
+        `;
+        historyContainer.innerHTML += recordDiv;
+    });
+}
+
+// 5. إرسال طلب السحب
+submitBtn.addEventListener('click', async () => {
+    if (submitBtn.disabled) return;
+    
+    const amount = amountInput.value;
+    const method = methodSelect.value;
+    const details = methodSelect.value === 'Other' ? detailsInput.value : method;
+
+    if (amount < 50) {
+        showToast('الحد الأدنى للسحب هو 50 دولاراً. ❌', true);
+        return;
+    }
+    if (amount > availableBalance) {
+        showToast('المبلغ المطلوب أكبر من الرصيد المتاح. ❌', true);
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="loader" style="width: 15px; height: 15px;"></div> جارٍ الإرسال...';
+    
+    const formData = new FormData();
+    formData.append('action', 'request_withdrawal');
+    formData.append('marketer_id', marketerId);
+    formData.append('amount', amount);
+    formData.append('method', method);
+    formData.append('details', details); // إرسال التفاصيل
+
+    try {
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('تم إرسال طلب السحب بنجاح! ✅');
+            amountInput.value = ''; // مسح حقل المبلغ
+            detailsInput.value = '';
+            methodSelect.value = '';
+            detailsInput.style.display = 'none';
+            detailsLabel.style.display = 'none';
+            fetchWithdrawalData(); // تحديث الرصيد والسجل
+        } else {
+            showToast(data.message || 'فشل إرسال الطلب. ❌', true);
+        }
+
+    } catch(err) {
+        showToast('فشل الاتصال بالخادم. ❌', true);
+        console.error('Submission error:', err);
+    } finally {
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال طلب السحب';
+        checkFormValidity(); // إعادة تمكين الزر إذا لم يكن هناك خطأ في التحقق
+    }
+});
+
+// 🚀 تشغيل دالة الجلب عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', fetchWithdrawalData);
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
