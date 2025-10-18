@@ -119,7 +119,7 @@
                   <select id="gender" name="gender" required>
                     <option value="">اختر الجنس</option>
                     <option value="ذكر">ذكر</option>
-                    <option value="إنثى">أنثى</option>
+                    <option value="أنثى">أنثى</option>
                     <option value="آخر">آخر</option>
                   </select>
                 </div>
@@ -185,6 +185,8 @@
     // ----------------------------------------------------------------------
     const DEVICE_SERIAL_KEY = 'marketer_device_serial';
     const MARKETER_SESSION_KEY = 'marketer_session_data'; 
+    // مفتاح لتخزين بيانات الدخول في حالة انتظار OTP
+    const OTP_PENDING_KEY = 'otp_pending_login'; 
     
     const actionButtons = document.querySelectorAll('.action-btn');
     const loginWrapper = document.getElementById('loginWrapper');
@@ -384,6 +386,13 @@
 
         // إضافة مستمع لزر التحقق
         document.getElementById('verifyOtpBtn').addEventListener('click', handleOtpVerification);
+        
+        // محاولة جلب البيانات المخزنة إذا كانت موجودة، لضمان استمرار الجلسة
+        const storedData = localStorage.getItem(OTP_PENDING_KEY);
+        if (storedData) {
+            // تحديث المتغير المؤقت من التخزين المحلي فوراً إذا وجدنا البيانات
+            pendingLoginData = JSON.parse(storedData);
+        }
     }
     
     // إخفاء حقول OTP
@@ -392,7 +401,8 @@
         if (otpContainer) {
             otpContainer.remove();
         }
-        pendingLoginData = null;
+        pendingLoginData = null; // مسح المتغير المؤقت من الذاكرة
+        // ***** تم حذف: localStorage.removeItem(OTP_PENDING_KEY); من هنا *****
         loginSubmitBtn.style.display = 'block'; // إعادة زر تسجيل الدخول الأصلي
     }
     
@@ -401,8 +411,29 @@
         const otpInput = document.getElementById('otpCode').value.trim();
         const verifyOtpBtn = document.getElementById('verifyOtpBtn');
 
-        if (otpInput.length !== 6 || !pendingLoginData) {
+        // 1. محاولة جلب البيانات من الجلسة المؤقتة (الأولوية)
+        let currentPendingData = pendingLoginData;
+        
+        // 2. إذا كانت فارغة، حاول جلبها من التخزين المحلي (للتغطية في حالة تحديث الصفحة)
+        if (!currentPendingData) {
+            const storedData = localStorage.getItem(OTP_PENDING_KEY); 
+            if (storedData) {
+                currentPendingData = JSON.parse(storedData);
+                pendingLoginData = currentPendingData; // تحديث الذاكرة المؤقتة أيضاً
+            }
+        }
+        
+        // التحقق من طول رمز OTP
+        if (otpInput.length !== 6) { 
             showMessage(loginErrorBox, 'الرجاء إدخال رمز تحقق صحيح (6 أرقام).');
+            return;
+        }
+
+        // التحقق من وجود بيانات الدخول (التي كانت تسبب الخطأ الفوري)
+        if (!currentPendingData) {
+            showMessage(loginErrorBox, 'انتهت جلسة تسجيل الدخول. الرجاء البدء من جديد بإدخال البريد وكلمة المرور.');
+            // مسح أي بقايا في التخزين المحلي لضمان تنظيف كامل
+            localStorage.removeItem(OTP_PENDING_KEY);
             return;
         }
 
@@ -412,7 +443,7 @@
 
         // إرسال البيانات كاملة مع OTP
         const formData = {
-            ...pendingLoginData,
+            ...currentPendingData, // استخدام البيانات المسترجعة
             otp: otpInput
         };
 
@@ -421,16 +452,22 @@
         // إزالة حالة التحميل
         resetButton(verifyOtpBtn);
 
+
         if (result.success) {
+            // النجاح: مسح بيانات الجلسة المؤقتة بعد النجاح
+            localStorage.removeItem(OTP_PENDING_KEY); // ****** مسح بيانات التخزين المحلي ******
+            pendingLoginData = null; 
+            
             showMessage(loginErrorBox, 'تم تأكيد الجهاز بنجاح! يتم الآن توجيهك...', 1500);
             setTimeout(() => {
-                showWelcome(result); // ****** الآن يتم التوجيه إلى home.html ******
+                showWelcome(result);
             }, 1500);
         } else {
             // فشل التحقق
             showMessage(loginErrorBox, result.message);
         }
     }
+
 
     // ----------------------------------------------------------------------
     // معالجة تسجيل الدخول المُعدّلة (لضمان إرسال البريد وكلمة المرور)
@@ -440,22 +477,26 @@
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       
-      // ****** التحقق من عدم فراغ الحقول في الواجهة الأمامية (جديد) ******
+      // التحقق من عدم فراغ الحقول في الواجهة الأمامية
       if (!email || !password) {
           showMessage(loginErrorBox, 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.');
           return;
       }
-      // ***************************************************************
       
-      // حفظ البيانات مؤقتًا (فقط لاستخدامها لاحقاً في OTP)
+      // حفظ البيانات مؤقتًا في الذاكرة (الأولوية)
       pendingLoginData = { email, password }; 
-
+      
+      // ****** إضافة تخزين البيانات في localStorage في حالة طلب OTP (يتم مسحها فقط عند النجاح أو الفشل) ******
+      localStorage.setItem(OTP_PENDING_KEY, JSON.stringify(pendingLoginData)); 
+      
+      // ****** إخفاء حقل OTP في بداية محاولة الدخول. التخزين المحلي لن يتم مسحه هنا الآن ******
+      hideOtpInput(); 
+      // *************************************************************************************************
+      
       // ****** تفعيل حالة التحميل ******
       setLoadingState(loginSubmitBtn, 'جاري تسجيل الدخول...');
-      // *******************************
       
       loginErrorBox.classList.remove('show');
-      hideOtpInput(); // إخفاء حقل OTP في بداية محاولة الدخول
 
       // الإرسال مع دمج البيانات المطلوبة مباشرة
       const formDataToSend = { email, password };
@@ -468,14 +509,17 @@
 
       if(result.success){
         // تسجيل الدخول الناجح (جهاز معروف)
+        localStorage.removeItem(OTP_PENDING_KEY); // مسح البيانات الاحتياطية
         showWelcome(result); 
       } else if (result.require_otp) {
-        // حالة الجهاز الجديد: طلب رمز OTP
+        // حالة الجهاز الجديد: طلب رمز OTP (هنا نحتفظ بالبيانات المخزنة)
         showMessage(loginErrorBox, result.message, 5000);
         createOtpInput();
         loginSubmitBtn.style.display = 'none'; // إخفاء زر الدخول الأصلي
       } else {
-        // خطأ عام في الدخول
+        // خطأ عام في الدخول (كلمة مرور خطأ، بريد غير موجود، الخ.)
+        localStorage.removeItem(OTP_PENDING_KEY); // ****** مسح البيانات الاحتياطية لأن الجلسة انتهت بخطأ
+        pendingLoginData = null; 
         showMessage(loginErrorBox, result.message);
       }
     });
@@ -601,6 +645,7 @@
     logoutBtn.addEventListener('click', ()=>{
       localStorage.removeItem(DEVICE_SERIAL_KEY); 
       localStorage.removeItem(MARKETER_SESSION_KEY); 
+      localStorage.removeItem(OTP_PENDING_KEY); // ****** مسح بيانات الـ OTP المعلقة
       // إزالة stored_marketer_id أيضاً لتنظيف الجلسة تماماً
       localStorage.removeItem('stored_marketer_id'); 
       location.reload(); 
@@ -631,7 +676,25 @@
 
       // إخفاء واجهة الترحيب عند تحميل الصفحة إذا لم يتم التوجيه (لأنه واجهة index.html الأساسية هي تسجيل الدخول/التسجيل)
       welcomeLoggedIn.style.display = 'none';
+      
+      // ****** التحقق إذا كنا في انتظار OTP عند تحميل الصفحة ******
+      const storedData = localStorage.getItem(OTP_PENDING_KEY);
+      if(storedData) {
+          // إذا وجدنا بيانات، فهذا يعني أن المستخدم حدث الصفحة أثناء انتظار OTP
+          // نعيد بناء حقل OTP مباشرة وننتقل إلى واجهة تسجيل الدخول
+          
+          // تأكد من أننا في واجهة تسجيل الدخول (في حال كنا على تبويب التسجيل الجديد)
+          actionButtons.forEach(b => b.classList.remove('active'));
+          document.querySelector('[data-action="login"]').classList.add('active');
+          loginWrapper.style.display = 'block';
+          registerWrapper.style.display = 'none';
+          
+          createOtpInput();
+          loginSubmitBtn.style.display = 'none'; // إخفاء زر الدخول الأصلي
+      }
+      // ************************************************************
     });
   </script>
 </body>
 </html>
+
