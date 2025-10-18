@@ -17,12 +17,39 @@
 
     <link rel="stylesheet" href="table-styles.css">   
     <link rel="stylesheet" href="style.css">   
+    
+    <style>
+        /* 1. إخفاء زر القائمة بالكامل */
+        #menu-toggle, .menu-toggle {
+            display: none !important; 
+        }
+        
+        /* 2. تغيير لون أيقونة القائمة إلى الأبيض (كإجراء احتياطي إذا ظهرت) */
+        .menu-toggle i {
+            color: white !important;
+        }
+    </style>
 </head>  
 <body>  
     <div class="dashboard-container">  
         <header>  
             <h1>لوحة تحكم المسوِّق</h1>  
             <p id="marketer-id-display">الرجاء إدخال المعرّف في الرابط</p>  
+              <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  
+    <nav>
+   
+        <a href="../contact.html">تواصل معنا               </a>
+         <a href="w-c.html"> سحب العمولات</a>
+           </nav>
+      
+            
+    
+      
+            
         </header>  
         <div class="content">  
             <div id="statusMessage" class="loading" style="text-align:center; color:#555;">  
