@@ -201,9 +201,8 @@ let marketerId = null;
 marketerId = params.get('marketer_id');
 
 if (!marketerId) {
-  // يفترض أنَّ marketer_tracker.js قد قام بحفظ المعرّف باسم 'stored_marketer_id'
   marketerId = localStorage.getItem('stored_marketer_id');
-}
+   }
 
 if (!marketerId) {
   console.warn('⚠️ لا يوجد معرف في الرابط أو التخزين المحلي.');
