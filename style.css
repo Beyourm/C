@@ -431,20 +431,24 @@
 /*ملف الفوتر */
 
 
+/* ================== Footer CSS Styling ================== */
 
-
-
+/* تعريف الفوتر وجعله ثابتاً في الأسفل */
 .footer {
-  background-color: #0d3b14;
-  color: #ffffff;
+  background-color: var(--primary-color, #0d3b14); /* لون خلفية أساسي */
+  color: var(--white-color, #ffffff);
   padding: 15px 20px;
   text-align: center;
   width: 100%;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
   font-family: 'Tajawal', sans-serif;
-
-  /* إزالة أي position fixed */
-  position: relative;
+  
+  /* **التعديلات الحاسمة لثبات الفوتر في الأسفل** */
+  position: fixed; 
+  bottom: 0; 
+  left: 0; /* لضمان تغطية كامل العرض من اليسار لليمين */
+  right: 0; /* لضمان تغطية كامل العرض من اليمين لليسار (مهم للـ RTL) */
+  z-index: 900; /* يجب أن يكون أعلى من معظم العناصر، لكن أقل من الـ Toast */
 }
 
 .footer-container {
@@ -455,31 +459,60 @@
   margin: 0 auto;
 }
 
+.footer-text {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* تنسيق زر تسجيل الخروج */
 .btn-logout {
-  background-color: #28a745;
-  color: #fff;
+  background-color: var(--success-color, #28a745);
+  color: var(--white-color, #fff);
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .btn-logout:hover {
   background-color: #218838;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-/* مساحة أسفل الصفحة لتجنب تداخل المحتوى مع الفوتر */
+.btn-logout:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+
+/* **إضافة مسافة أسفل الـ body لتجنب تداخل المحتوى مع الفوتر الثابت** */
 body {
+  /* يُضاف هذا التعديل إلى كود body العام */
   margin: 0;
-  padding-bottom: 80px; /* يكفي مساحة الفوتر */
+  padding-bottom: 80px; /* يجب أن تكون القيمة أكبر قليلاً من ارتفاع الفوتر (60 بكسل تقريباً) */
 }
 
+/* التنسيق للشاشات الصغيرة */
 @media (max-width: 768px) {
+  .footer {
+    padding: 10px 15px; /* تقليل الـ padding في الجوال */
+  }
   .footer-container {
     flex-direction: column;
-    gap: 10px;
+    gap: 5px; /* تقليل المسافة بين العناصر */
+  }
+  .footer-text {
+      font-size: 12px; /* تصغير الخط */
   }
 }
+
+
+
+
+
+
+
