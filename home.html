@@ -96,13 +96,6 @@
           
                 <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>  
 
-                <div style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #eee;">
-                    <button onclick="logoutUser()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px;">
-                        <i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i> تسجيل الخروج
-                    </button>
-                </div>
-                
-
             </div>  
         </div>
     </div>  
@@ -131,41 +124,86 @@
                 });
             }
         });
-        // 💥 الكود الجديد رقم 1: دالة تسجيل الخروج ومسح الـ localStorage
-function logoutUser() {
-    // 1. مسح معرف المسوق المخزن (من marketer_tracker.js)
-    localStorage.removeItem('stored_marketer_id');
-    
-    // 2. مسح بيانات جلسة الدخول النشطة (من index.html)
-    localStorage.removeItem('marketer_session_data'); // المفتاح الذي تبحث عنه!
-    
-    // 3. مسح مفتاح معرّف الجهاز (لأغراض أمان OTP)
-    localStorage.removeItem('marketer_device_serial');
-    
-    // 4. مسح بيانات الـ OTP المعلقة (للتنظيف)
-    localStorage.removeItem('otp_pending_login');
-    
-    console.log('Marketer session and tracking data cleared. Logging out.');
-    
-    // 5. إعادة التوجيه إلى صفحة تسجيل الدخول/الصفحة الرئيسية
-    // (⚠️ تأكد أن هذا هو الرابط الصحيح لصفحة تسجيل الدخول أو الرئيسية)
-    window.location.href = 'https://beyourm.github.io/C/'; 
-}
-
-        
-        
-
-            
-   
     </script>
+    
+    
+    <!-- ================== Footer عصري ================== -->
+<footer id="mainFooter" class="footer" style="display: none;">
+  <div class="footer-container">
+    <p>© 2025 مؤسسة كن أنت للتدريب والتأهيل</p>
+    <button id="logoutBtn" class="btn-logout">تسجيل الخروج</button>
+  </div>
+</footer>
+
+<!-- ================== CSS الفوتر ================== -->
+<style>
+  .footer {
+    background-color: #0d3b14;
+    color: #ffffff;
+    padding: 15px 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .btn-logout {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .btn-logout:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+  }
+
+  body {
+    padding-bottom: 70px;
+  }
+
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+</style>
+
+<!-- ================== سكربت التحقق من تسجيل الدخول ================== -->
+<script src="logout.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const MARKETER_SESSION_KEY = 'marketer_session_data'; // المفتاح المستخدم
+    const mainFooter = document.getElementById("mainFooter");
+
+    // تحقق من تسجيل الدخول
+    const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
+
+    if (isLoggedIn) {
+      mainFooter.style.display = "block"; // إظهار الفوتر
+    }
+  });
+</script>
+    
     
     <script src="marketer_tracker.js"></script>   
     <script src="home-logic.js"></script>   
 </body>  
 </html>
-
-
-
-
-
-
+ 
