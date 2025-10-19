@@ -7,42 +7,31 @@
 
 <style>
   body {
+    /* تم إزالة الخلفية والـ padding الزائد من الـ body */
     font-family: "Cairo", sans-serif;
-    background: #f3f4f6;
+    background: #fff; /* خلفية بيضاء لملء الـ iframe */
     text-align: center;
-    padding: 50px;
+    padding: 10px; /* هامش بسيط */
+    margin: 0;
   }
 
-  /* خلفية النافذة */
-  .dialog-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(3px);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.3s ease;
-  }
-
-  /* الصندوق */
+  /* تم إزالة .dialog-overlay بالكامل لأننا سنعتمد على النافذة الرئيسية */
+  
   .dialog-box {
+    /* تم تعديل هذا الصندوق ليكون بمثابة محتوى الـ iframe */
     background: #fff;
-    border-radius: 18px;
-    padding: 25px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    animation: slideUp 0.4s ease;
+    border-radius: 10px; 
+    padding: 15px;
+    box-shadow: none; /* إزالة الظل هنا لأن الـ iframe له ظل خارجي */
     text-align: right;
   }
 
   .dialog-header {
-    font-size: 20px;
+    font-size: 18px; /* تصغير الخط قليلاً ليلائم الإطار */
     font-weight: 700;
     color: #222;
     text-align: center;
+    margin-bottom: 10px; /* إضافة فاصل */
   }
 
   .toggle-btn {
@@ -80,13 +69,9 @@
     display: none; 
     border-top: 1px solid #ddd;
     padding-top: 10px;
-    
-    /* ------------------------------------- */
-    /* التعديلات الجديدة لتمكين التمرير */
-    max-height: 250px; /* تحديد أقصى ارتفاع للقائمة (يمكنك تعديله) */
-    overflow-y: auto;   /* تفعيل التمرير العمودي عند تجاوز الارتفاع المحدد */
-    padding-right: 5px; /* مسافة داخلية لتجنب تداخل شريط التمرير مع المحتوى */
-    /* ------------------------------------- */
+    max-height: 200px; /* تصغير الارتفاع ليلائم الـ iframe */
+    overflow-y: auto;   
+    padding-right: 5px; 
   }
 
   .course-item {
@@ -96,9 +81,8 @@
     margin-bottom: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    /* التعديل: تفعيل Flexbox لوضع العناصر جانباً لجانب */
     display: flex; 
-    justify-content: space-between; /* دفع العناصر إلى الأطراف */
+    justify-content: space-between; 
     align-items: center;
   }
 
@@ -119,72 +103,67 @@
     border-radius: 8px;
   }
 
-  /* الكلاس الجديد لتنسيق الرسوم باللون الأحمر */
   .levies-text-red {
-    color: #ef4444; /* لون أحمر واضح */
+    color: #ef4444; 
     font-weight: 700;
     font-size: 15px;
-    background: #fee2e2; /* خلفية حمراء فاتحة */
+    background: #fee2e2; 
     padding: 3px 8px;
     border-radius: 6px;
   }
 
 
-  .close-btn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    width: 100%;
+  /* تم إزالة زر الإغلاق من هنا لأنه سيتم استخدامه في الصفحة الرئيسية */
+  .close-btn { 
+    display: none !important; 
   }
 
-  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-  @keyframes slideUp { from {transform:translateY(30px);opacity:0;} to {transform:translateY(0);opacity:1;} }
+  /* تم إزالة حركات الـ CSS لأن الـ iframe قد لا يدعمها بشكل كامل */
+
 </style>
 </head>
 
 <body>
 
-<div class="dialog-overlay" id="dialogOverlay">
-  <div class="dialog-box">
-    <div class="dialog-header">🎓اختر الدورة المراد التسوق لها </div>
-    <button class="toggle-btn" id="toggleButton">
-      عرض الدورات <span class="arrow" id="arrow">🔻</span>
-    </button>
+<div class="dialog-box">
+  <div class="dialog-header">🎓اختر الدورة المراد التسوق لها </div>
+  <button class="toggle-btn" id="toggleButton">
+    عرض الدورات <span class="arrow" id="arrow">🔻</span>
+  </button>
 
-    <div class="course-list" id="courseList">
-      </div>
+  <div class="course-list" id="courseList">
+    </div>
 
-    <div class="message" id="message">تم نسخ الرابط ✅</div>
-    <button class="close-btn" id="closeButton">إغلاق</button>
+  <div class="message" id="message">تم نسخ الرابط ✅</div>
   </div>
-</div>
+
 
 <script>
 // ⛔⛔⛔ هام: تم تحديث هذا بالرابط الجديد بعد نشر Google Apps Script ⛔⛔⛔
 const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvaDty4OhXdnR3poYEuwj9W53esn2923XYpKZc7LTKf_M17Z576YGP_EkjB9bt-hN8pA/exec";
 
-let COURSES = []; // قائمة الدورات الآن ديناميكية
-
+let COURSES = []; 
+let marketerId = 'TTTTTT11'; // تم تعيين قيمة افتراضية هنا
 
 // ====== الدوال الأساسية ======
 
 /**
- * 1. استخلاص معرّف المسوِّق من رابط URL الحالي
+ * 1. استخلاص معرّف المسوِّق من رابط URL الحالي (الآن يبحث في رابط الـ iframe)
  * @returns {string} معرّف المسوِّق أو القيمة الافتراضية TTTTTT11
  */
 function getMarketerIdFromUrl() {
     const fallbackId = 'TTTTTT11';
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    return urlParams.get('marketer_id') || urlParams.get('id') || fallbackId;
+    // نستخدم window.parent.location.search للبحث في رابط الصفحة الأم
+    try {
+        const parentUrlParams = new URLSearchParams(window.parent.location.search);
+        // نبحث عن marketer_id في رابط الصفحة الرئيسية
+        return parentUrlParams.get('marketer_id') || parentUrlParams.get('id') || fallbackId;
+    } catch(e) {
+        // في حال كان الـ iframe محمل من نطاق آخر (Cross-origin)، نعود للافتراضي
+        console.warn("Could not access parent URL for marketer ID, using fallback.");
+        return fallbackId;
+    }
 }
-
-const marketerId = getMarketerIdFromUrl();
 
 
 /**
@@ -193,8 +172,8 @@ const marketerId = getMarketerIdFromUrl();
 async function fetchCourses() {
     const listContainer = document.getElementById('courseList');
     listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:#555;">جارٍ تحميل الدورات...</div>';
-    listContainer.style.display = 'block'; // إظهار رسالة التحميل
-
+    // ليتم التحكم بالعرض بواسطة toggleList
+    
     try {
         const response = await fetch(APP_SCRIPT_URL);
         if (!response.ok) {
@@ -202,10 +181,9 @@ async function fetchCourses() {
         }
         const data = await response.json();
         
-        // التأكد من وجود مصفوفة الدورات
         if (data && data.courses && Array.isArray(data.courses)) {
-            COURSES = data.courses; // تعيين القائمة العالمية
-            renderCourseList(); // عرض الدورات المجلوبة
+            COURSES = data.courses; 
+            renderCourseList(); 
         } else {
             throw new Error("تنسيق بيانات غير صالح من الخادم.");
         }
@@ -217,11 +195,11 @@ async function fetchCourses() {
 
 
 /**
- * 3. بناء وإضافة عناصر الدورات إلى قائمة القائمة (تم التعديل لعرض الرسوم باللون الأحمر والدولار)
+ * 3. بناء وإضافة عناصر الدورات إلى قائمة القائمة
  */
 function renderCourseList() {
     const listContainer = document.getElementById('courseList');
-    listContainer.innerHTML = ''; // تنظيف القائمة
+    listContainer.innerHTML = ''; 
 
     if (COURSES.length === 0) {
          listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:#555;">لا توجد دورات متاحة حالياً.</div>';
@@ -232,13 +210,11 @@ function renderCourseList() {
         const item = document.createElement('div');
         item.className = 'course-item';
         
-        // بناء المحتوى مع إضافة كلاس اللون الأحمر ورمز الدولار
         item.innerHTML = `
           <span>${course.name}</span>
           <span class="levies-text-red">الرسوم: ${course.levies} $</span>
         `;
         
-        // نستخدم course.slug الذي هو في الواقع قيمة العمود A (id)
         item.setAttribute('onclick', `copyLink('${course.slug}')`); 
         listContainer.appendChild(item);
     });
@@ -255,25 +231,25 @@ function toggleList() {
     list.style.display = isVisible ? 'none' : 'block';
     arrow.classList.toggle('rotate');
 
-    // إذا تم فتح القائمة، تأكد من جلب الدورات إذا لم يتم جلبها مسبقًا
     if (!isVisible && COURSES.length === 0) {
         fetchCourses();
+    }
+    
+    // محاولة إرسال رسالة إلى الصفحة الأم لتعديل ارتفاع الدايلوج
+    try {
+        window.parent.postMessage({ type: 'DIALOG_RESIZE', height: document.body.scrollHeight + 50 }, '*');
+    } catch(e) {
+        // نتجاهل الخطأ إذا لم نتمكن من الوصول للصفحة الأم
     }
 }
 
 
 /**
  * 5. الدالة المعدلة لنسخ الرابط مع إضافة معرّف المسوِّق
- * @param {string} courseSlug - الـ slug الخاص بالدورة (قيمة العمود A/id)
  */
 function copyLink(courseSlug) {
-    // 🔗 هذا هو الرابط الأساسي لصفحة الدورة الصحيحة
     const baseUrl = "https://skillia.netlify.app/course.html"; 
-    
-    // بناء رابط الدورة بالتنسيق الصحيح: ?id=SLUG&marketer_id=CODE
     let fullLink = baseUrl + "?id=" + courseSlug;
-
-    // إضافة معرّف المسوِّق كبارامتر ثانٍ باستخدام علامة العطف '&'
     fullLink += "&marketer_id=" + marketerId;
     
     navigator.clipboard.writeText(fullLink).then(() => {
@@ -284,38 +260,24 @@ function copyLink(courseSlug) {
     });
 }
 
-/**
- * 6. إغلاق النافذة المنبثقة
- */
-function closeDialog() {
-    document.getElementById('dialogOverlay').style.display = 'none';
-}
-
-
 
 /**
- * 7. دالة التهيئة الرئيسية التي يتم استدعاؤها عند تحميل الصفحة
+ * 6. دالة التهيئة الرئيسية التي يتم استدعاؤها عند تحميل الصفحة
  */
 function initializeDialog() {
-    // 1. تحديث رأس الدايلوج لعرض كود المسوِّق
+    // 1. استخلاص كود المسوِّق مرة واحدة
+    marketerId = getMarketerIdFromUrl();
+    
+    // 2. تحديث رأس الدايلوج لعرض كود المسوِّق
     const header = document.querySelector('.dialog-header');
     header.innerHTML = `🎓اختر الدورة المراد التسوق لها (كودك: <span style="color:#2563eb;">${marketerId}</span>)`;
     
-    // 2. عرض الدايلوج
-    document.getElementById('dialogOverlay').style.display = 'flex';
-
-    // 3. ربط زر الإغلاق وزر التبديل باستخدام Event Listeners
-    document.getElementById('closeButton').addEventListener('click', closeDialog);
-    
-    // 4. ربط زر التبديل (عند الضغط عليه لأول مرة، سيقوم بتحميل الدورات)
+    // 3. ربط زر التبديل (عند الضغط عليه لأول مرة، سيقوم بتحميل الدورات)
     document.getElementById('toggleButton').addEventListener('click', toggleList);
-
-    // 5. محاولة جلب الدورات عند التهيئة (يمكن إزالة هذا السطر والاعتماد فقط على toggleList)
-    //fetchCourses();
 }
 
 
-// عند تحميل الصفحة، يتم استدعاء دالة التهيئة من dialog.js
+// عند تحميل الصفحة، يتم استدعاء دالة التهيئة
 window.onload = initializeDialog; 
 </script>
 
