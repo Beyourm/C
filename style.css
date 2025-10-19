@@ -252,3 +252,84 @@
             text-align: left;
         }
         /* التنسيقات المتعلقة بالجدول (مثل .table-container) ستنتقل إلى table-styles.css */
+
+
+
+
+
+
+/*الإضافات الجديدة */
+
+
+
+
+
+        /* 3. تنسيق عام لأزرار القائمة (روابط 'a' وزر 'button') */
+        nav a, nav button {
+            /* إعادة ضبط خصائص الزر/الرابط الأساسية */
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 10px 15px;
+            /* تم زيادة الهامش الأفقي لزيادة الفاصل بين الأزرار */
+            margin: 5px 15px; 
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.1s ease-out; /* لعملية الضغط */
+            position: relative;
+            
+            /* إعدادات محاكاة 3D الأساسية */
+            border: none;
+            box-shadow: 0 4px 0 0 #555; /* الظل السفلي الذي يعطي العمق */
+            transform: translateY(0);
+        }
+
+        /* 4. تنسيق أزرار 3D عند الضغط عليها (لإعطاء إحساس الضغط) */
+        nav a:active, nav button:active {
+            box-shadow: 0 0 0 0 #555; /* إزالة الظل السفلي */
+            transform: translateY(4px); /* تحريك الزر للأسفل */
+        }
+        
+        /* 5. تنسيق زر "تواصل معنا" */
+        nav a[href="../contact.html"] {
+            background-color: #007bff; 
+            color: white;
+            box-shadow: 0 4px 0 0 #0056b3; 
+        }
+
+        nav a[href="../contact.html"]:active {
+            box-shadow: 0 0 0 0 #0056b3;
+        }
+
+        /* 6. تنسيق زر "سحب العمولات" */
+        nav a[href="w-c.html"] {
+            background-color: #28a745; 
+            color: white;
+            box-shadow: 0 4px 0 0 #1e7e34;
+        }
+        
+        nav a[href="w-c.html"]:active {
+            box-shadow: 0 0 0 0 #1e7e34;
+        }
+
+        /* 7. تنسيق زر "عرض الدورات المتاحة" */
+        #show-courses-btn {
+            background-color: var(--secondary-color, #ff6b6b); 
+            color: white;
+            box-shadow: 0 4px 0 0 #e84343;
+        }
+        
+        #show-courses-btn:active {
+            box-shadow: 0 0 0 0 #e84343;
+        }
+
+        /* 8. ترتيب الأزرار داخل قائمة التنقل - تم التعديل هنا للمحاذاة للوسط */
+        nav {
+            display: flex; /* لترتيب الأزرار أفقياً */
+            flex-wrap: wrap;
+            justify-content: center; /* **المحاذاة للوسط** */
+            padding-bottom: 15px; /* لترك مساحة أسفل الأزرار */
+        }
+
