@@ -131,19 +131,41 @@
                 });
             }
         });
-        
         // 💥 الكود الجديد رقم 1: دالة تسجيل الخروج ومسح الـ localStorage
-        function logoutUser() {
-            // مسح معرف المسوق المخزن في الـ localStorage
-            localStorage.removeItem('stored_marketer_id');
-            console.log('Marketer ID cleared. Logging out.');
+function logoutUser() {
+    // 1. مسح معرف المسوق المخزن (من marketer_tracker.js)
+    localStorage.removeItem('stored_marketer_id');
+    
+    // 2. مسح بيانات جلسة الدخول النشطة (من index.html)
+    localStorage.removeItem('marketer_session_data'); // المفتاح الذي تبحث عنه!
+    
+    // 3. مسح مفتاح معرّف الجهاز (لأغراض أمان OTP)
+    localStorage.removeItem('marketer_device_serial');
+    
+    // 4. مسح بيانات الـ OTP المعلقة (للتنظيف)
+    localStorage.removeItem('otp_pending_login');
+    
+    console.log('Marketer session and tracking data cleared. Logging out.');
+    
+    // 5. إعادة التوجيه إلى صفحة تسجيل الدخول/الصفحة الرئيسية
+    // (⚠️ تأكد أن هذا هو الرابط الصحيح لصفحة تسجيل الدخول أو الرئيسية)
+    window.location.href = 'https://beyourm.github.io/C/'; 
+}
+
+        
+        
+
             
-            // ⚠️ قم بتغيير هذا الرابط لتوجيه المستخدم إلى صفحة تسجيل الدخول أو الصفحة الرئيسية
-            window.location.href = 'https://beyourm.github.io/C/'; 
-        }
+   
     </script>
     
     <script src="marketer_tracker.js"></script>   
     <script src="home-logic.js"></script>   
 </body>  
 </html>
+
+
+
+
+
+
