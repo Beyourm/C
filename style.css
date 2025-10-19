@@ -264,72 +264,117 @@
 
 
 
-        /* 3. تنسيق عام لأزرار القائمة (روابط 'a' وزر 'button') */
-        nav a, nav button {
-            /* إعادة ضبط خصائص الزر/الرابط الأساسية */
+
+
+
+
+
+
+
+   
+        /* 1. إخفاء زر القائمة بالكامل */
+        #menu-toggle, .menu-toggle {
+            display: none !important; 
+        }
+        
+        /* 2. تغيير لون أيقونة القائمة إلى الأبيض (كإجراء احتياطي إذا ظهرت) */
+        .menu-toggle i {
+            color: white !important;
+        }
+        
+        
+        
+             /* 3. تنسيق عام لأزرار القائمة (3D CSS) */
+        nav a, nav button, 
+        .close-btn { /* تم إضافة .close-btn هنا ليأخذ تنسيق الـ 3D الأساسي */
             display: inline-block;
             text-align: center;
             text-decoration: none;
             cursor: pointer;
             padding: 10px 15px;
-            /* تم زيادة الهامش الأفقي لزيادة الفاصل بين الأزرار */
             margin: 5px 15px; 
             border-radius: 8px;
             font-size: 14px;
             font-weight: bold;
-            transition: all 0.1s ease-out; /* لعملية الضغط */
+            transition: all 0.1s ease-out; 
             position: relative;
-            
-            /* إعدادات محاكاة 3D الأساسية */
             border: none;
-            box-shadow: 0 4px 0 0 #555; /* الظل السفلي الذي يعطي العمق */
+            box-shadow: 0 4px 0 0 #555; 
             transform: translateY(0);
         }
 
-        /* 4. تنسيق أزرار 3D عند الضغط عليها (لإعطاء إحساس الضغط) */
-        nav a:active, nav button:active {
-            box-shadow: 0 0 0 0 #555; /* إزالة الظل السفلي */
-            transform: translateY(4px); /* تحريك الزر للأسفل */
+        nav a:active, nav button:active,
+        .close-btn:active { /* تم إضافة .close-btn:active هنا */
+            box-shadow: 0 0 0 0 #555; 
+            transform: translateY(4px); 
         }
         
-        /* 5. تنسيق زر "تواصل معنا" */
-        nav a[href="../contact.html"] {
-            background-color: #007bff; 
-            color: white;
-            box-shadow: 0 4px 0 0 #0056b3; 
+        /* 4. تنسيق ألوان أزرار القائمة */
+        nav a[href="../contact.html"] { background-color: #007bff; color: white; box-shadow: 0 4px 0 0 #0056b3; }
+        nav a[href="w-c.html"] { background-color: #28a745; color: white; box-shadow: 0 4px 0 0 #1e7e34; }
+        #show-courses-btn { background-color: var(--secondary-color, #ff6b6b); color: white; box-shadow: 0 4px 0 0 #e84343; }
+        nav a[href="../contact.html"]:active { box-shadow: 0 0 0 0 #0056b3; }
+        nav a[href="w-c.html"]:active { box-shadow: 0 0 0 0 #1e7e34; }
+        #show-courses-btn:active { box-shadow: 0 0 0 0 #e84343; }
+
+        /* 5. تنسيق زر إغلاق الدايلوج (لونه وشكله) */
+        .close-btn {
+            /* تعديل اللون ليناسب الإغلاق */
+            background-color: #ef4444; 
+            color: white; 
+            /* تطبيق ظلال 3D خاصة به */
+            box-shadow: 0 4px 0 0 #b91c1c; 
+            width: 100%; /* اجعله يملأ المساحة المتاحة في الفورم */
+            margin: 0; /* إزالة الهوامش الزائدة */
+            font-size: 16px;
         }
 
-        nav a[href="../contact.html"]:active {
-            box-shadow: 0 0 0 0 #0056b3;
+        .close-btn:active {
+            box-shadow: 0 0 0 0 #b91c1c;
         }
 
-        /* 6. تنسيق زر "سحب العمولات" */
-        nav a[href="w-c.html"] {
-            background-color: #28a745; 
-            color: white;
-            box-shadow: 0 4px 0 0 #1e7e34;
-        }
-        
-        nav a[href="w-c.html"]:active {
-            box-shadow: 0 0 0 0 #1e7e34;
-        }
-
-        /* 7. تنسيق زر "عرض الدورات المتاحة" */
-        #show-courses-btn {
-            background-color: var(--secondary-color, #ff6b6b); 
-            color: white;
-            box-shadow: 0 4px 0 0 #e84343;
-        }
-        
-        #show-courses-btn:active {
-            box-shadow: 0 0 0 0 #e84343;
-        }
-
-        /* 8. ترتيب الأزرار داخل قائمة التنقل - تم التعديل هنا للمحاذاة للوسط */
+        /* 6. ترتيب الأزرار داخل قائمة التنقل - محاذاة للوسط */
         nav {
-            display: flex; /* لترتيب الأزرار أفقياً */
+            display: flex; 
             flex-wrap: wrap;
-            justify-content: center; /* **المحاذاة للوسط** */
-            padding-bottom: 15px; /* لترك مساحة أسفل الأزرار */
+            justify-content: center; 
+            padding-bottom: 15px; 
         }
+
+        /* 7. تنسيق الدايلوج لملء الشاشة */
+        #courses-dialog {
+            width: 90%; 
+            height: 90vh; 
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            padding: 0;
+            overflow: hidden;
+            margin: auto; 
+        }
+        
+        #courses-dialog::backdrop {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* 8. تنسيق محتوى الدايلوج (الـ iframe و زر الإغلاق) */
+        .dialog-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+        }
+        
+        #courses-dialog iframe {
+            flex-grow: 1; 
+            width: 100%; 
+            border: none;
+        }
+
+        #courses-dialog form {
+            flex-shrink: 0; 
+            padding: 15px 20px;
+            text-align: center; /* **التعديل الرئيسي: محاذاة الزر للوسط** */
+        }
+  
+
 
