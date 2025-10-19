@@ -147,26 +147,27 @@
 
 <!-- ================== CSS الفوتر ================== -->
 <style>
-  .footer {
+.footer {
     background-color: #0d3b14;
     color: #ffffff;
     padding: 15px 20px;
     text-align: center;
-    
     width: 100%;
     box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
     font-family: 'Tajawal', sans-serif;
-  }
+    box-sizing: border-box; /* مهم للتأكد أن padding لا يزيد عن العرض */
+}
 
-  .footer-container {
+.footer-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-  }
+    flex-wrap: wrap; /* هذا يسمح للعنصر أن يلتف عند صغر الشاشة */
+}
 
-  .btn-logout {
+.btn-logout {
     background-color: #28a745;
     color: #fff;
     border: none;
@@ -175,23 +176,26 @@
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
-  }
+    flex-shrink: 0; /* يمنع الزر من الانكماش */
+}
 
-  .btn-logout:hover {
+.btn-logout:hover {
     background-color: #218838;
     transform: translateY(-2px);
-  }
+}
 
-  body {
+body {
     padding-bottom: 70px;
-  }
+}
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .footer-container {
-      flex-direction: column;
-      gap: 10px;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
     }
-  }
+}
 </style>
 
 <!-- ================== سكربت الفوتر وتسجيل الخروج ================== -->
