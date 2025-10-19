@@ -1,3 +1,9 @@
+const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
+if (!isLoggedIn) {
+    window.location.href = "index.html"; // إعادة التوجيه مباشرة
+}
+
+
 // ----------------------------------------------------
 // --- الثوابت والإعدادات ---
 // ----------------------------------------------------
