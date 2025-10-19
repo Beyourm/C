@@ -1,7 +1,21 @@
-const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
-if (!isLoggedIn) {
-    window.location.href = "index.html"; // إعادة التوجيه مباشرة
-}
+document.addEventListener("DOMContentLoaded", function() {
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    // عرض شاشة التحميل فور تحميل الصفحة
+    loadingOverlay.style.display = "flex";
+
+    setTimeout(() => {
+        const isLoggedIn = localStorage.getItem('marketer_session_data');
+        if (!isLoggedIn) {
+            // إعادة التوجيه إذا لم يتم تسجيل الدخول
+            window.location.href = "index.html";
+        } else {
+            // إخفاء شاشة التحميل إذا المستخدم مسجل دخول
+            loadingOverlay.style.display = "none";
+        }
+    }, 800); // مدة قصيرة لإظهار دائرة التحميل
+});
+
 
 
 // ----------------------------------------------------
