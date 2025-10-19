@@ -18,8 +18,14 @@
         --success-color: #16a34a; 
         --border-color: #d1d5db;
         --error-color: #dc2626; 
+        --warn-color: #f59e0b; /* لون التحذير */
+        --info-color: #3b82f6; /* لون المعلومات/التوجيه */
         --retry-btn-bg: #4f46e5;
         --text-color: #333;
+        --spinner-size: 90px; /* زيادة حجم الدائرة بنسبة 50% */
+        --logo-size: 45px; /* نصف حجم الدائرة تقريباً */
+        --light-success-color: #a7f3d0;
+        --mid-success-color: #22c55e;
     }
 
     body {
@@ -33,94 +39,166 @@
       flex-direction: column;
       text-align: center;
       margin: 0;
-      /* تحسين السرعة والأداء عبر تأجيل الحركة */
       transition: opacity 0.5s ease;
     }
     
+    /* 3. زيادة حجم Spinner والشعار على الأجهزة الكبيرة */
+    @media (min-width: 1024px) {
+        :root {
+            --spinner-size: 100px;
+            --logo-size: 50px; 
+        }
+    }
+
     /* 2. دعم الوضع الليلي (Dark Mode) */
     @media (prefers-color-scheme: dark) {
       :root {
         --text-color: #eee;
+        --border-color: #374151; 
       }
       body {
-        /* 4. 🌙 تحسين الانتقال بين الأوضاع (ليلي / نهاري) */
         transition: background 0.6s ease, color 0.6s ease;
         background: radial-gradient(circle at top left, #064e3b, #022c22);
       }
-      .spinner {
-        border-color: #374151;
-        border-top-color: var(--success-color);
+      .spinner { background-color: var(--border-color); }
+      .spinner::before { border: 3px solid rgba(22, 163, 74, 0.4); }
+      .error, .error a { color: #fca5a5 !important; }
+      .loading {
+        background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
-      .error a {
-          color: #fca5a5 !important;
-      }
+      .loading.error { -webkit-text-fill-color: var(--error-color) !important; }
+    }
+    
+    /* ---------------------------------------------------- */
+    /* تحسينات الـ Spinner الفاخرة المدمجة  */
+    /* ---------------------------------------------------- */
+    .spinner-wrapper {
+        position: relative;
+        width: var(--spinner-size);
+        height: var(--spinner-size);
+        margin-bottom: 25px;
+        animation: float 3s ease-in-out infinite; 
+        
+        /* 1. تأثير تلاشي متدرج للـ Spinner عند إعادة التوجيه */
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    
+    .spinner-wrapper.fade-out {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    
+    .spinner {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(22, 163, 74, 0.5); /* زيادة الوهج */
+      
+      /* ✨ حلقة متوهجة ثلاثية الطبقات */
+      background: conic-gradient(
+        var(--success-color) 0deg 120deg, 
+        var(--mid-success-color) 120deg 240deg, 
+        transparent 240deg 360deg
+      );
+      mask: radial-gradient(farthest-side, transparent calc(100% - 6px), black 100%);
+      animation: rotateGlow 1s linear infinite;
     }
 
+    .spinner::before {
+      content: "";
+      position: absolute;
+      inset: -10px; /* زيادة مساحة الوهج الخارجي */
+      border-radius: 50%;
+      border: 3px solid rgba(22, 163, 74, 0.2); 
+      filter: blur(10px); /* زيادة التمويه */
+      animation: rotateGlow 1.2s linear infinite reverse; 
+    }
+    
+    @keyframes rotateGlow {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* 1. دمج الشعار داخل الدائرة تماماً */
     img {
-      width: 90px;
-      height: 90px; /* لضمان الشكل الدائري */
-      object-fit: cover; /* لضمان عدم تشوه الصورة */
-      margin-bottom: 20px;
-      border-radius: 50%; /* جعل الشعار دائرى */
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-      /* حركة اهتزاز خفيفة */
-      animation: 
-        float 3s ease-in-out infinite, 
-        spinLogo 12s linear infinite,
-        scalePulse 2.5s ease-in-out infinite; /* جعل الشعار يكبر ويصغر تدريجيا */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--logo-size);
+        height: var(--logo-size);
+        border-radius: 50%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        animation: scalePulse 2s ease-in-out infinite; 
     }
     
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-8px); } /* زيادة حركة الطفو قليلاً */
     }
-    @keyframes spinLogo {
-      to { transform: rotate(360deg); }
-    }
-    /* حركة الكبر والصغر التدريجي للشعار */
     @keyframes scalePulse {
         0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.08); }
+        50% { transform: scale(1.12); }
     }
 
+    /* ---------------------------------------------------- */
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid var(--border-color);
-      border-top-color: var(--success-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
-      box-shadow: 0 0 10px rgba(22, 163, 74, 0.2);
-    }
 
+    /* تدرج ألوان ديناميكي للنص أثناء التحميل */
     .loading {
       font-size: 1.2rem;
-      color: var(--success-color);
       font-weight: 500;
       min-height: 1.2rem;
       padding: 0 1rem;
       word-break: break-word;
-      /* تحسين تجربة الرسائل بتأثير Fade */
-      transition: opacity 0.5s ease, color 0.6s ease; 
       opacity: 1;
+      
+      /* Blur ديناميكي وتلاشي سريع */
+      transition: opacity 0.3s ease, filter 0.3s ease, color 0.3s ease;
+      filter: blur(0);
+      
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 2.5s ease-in-out infinite;
     }
+    
     .loading.hidden {
       opacity: 0;
+      filter: blur(5px);
+    }
+    
+    /* 2. الألوان الديناميكية للنص حسب الحالة */
+    .loading[data-color="warn"] {
+        -webkit-text-fill-color: var(--warn-color);
+        background: none;
+        animation: none;
+    }
+    .loading[data-color="info"] {
+        -webkit-text-fill-color: var(--info-color);
+        background: none;
+        animation: none;
+    }
+    /* default color is success/gradient */
+
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
     
     .error {
-      color: var(--error-color);
+      color: var(--error-color) !important;
       font-weight: bold;
-      animation: none;
+      -webkit-text-fill-color: var(--error-color) !important;
+      background: none !important;
+      animation: none !important;
+      filter: none !important;
     }
-    .error a {
-        color: var(--error-color);
-        font-weight: bold;
-        text-decoration: underline;
-    }
-    
+    /* CSS للـ Retry Button كما هي */
     #retryBtn {
         background-color: var(--retry-btn-bg);
         color: white;
@@ -137,50 +215,52 @@
         background-color: #3730a3;
         transform: scale(1.02);
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
   </style>
   
   <script defer>
-    // 5. 🔒 تلميح أمني (اختياري) - لمنع الرجوع لصفحة التحقق بعد التوجيه
+    // 🔒 تلميح أمني
     history.pushState(null, '', location.href);
     window.onpopstate = () => history.go(1);
 
+    // 4. دالة إضافة تأثير صوت خفيف عند ظهور رسالة جديدة
+    function playChime() {
+        if ('Audio' in window) {
+            try {
+                // استخدام صوت بيانات مدمج (Data URI) لتقليل طلبات HTTP
+                const audio = new Audio('data:audio/wav;base64,UklGRl9QDXdBVkUQF8BQXkZFQU1QTEkACkRJQkRJRgAA');
+                audio.volume = 0.2; // صوت خفيف
+                audio.play().catch(() => {}); // تجنب خطأ التفاعل التلقائي
+            } catch (e) {
+                /* تتجاهل إذا كانت البيئة لا تدعم Audio */
+            }
+        }
+    }
+    
     // 1. تحديد الثوابت والمتغيرات القابلة للتخصيص
     const MARKETER_SESSION_KEY = 'marketer_session_data';
-    
     const params = new URLSearchParams(window.location.search);
     const delay = Number(params.get('delay')) || 1500; 
     const SESSION_ID_PROPERTY = params.get('prop') || 'marketer_id'; 
     
-    // 3. ⚙️ دعم مسار ديناميكي للصفحات
+    // ⚙️ دعم مسار ديناميكي للصفحات
     const pathParts = window.location.pathname.split('/');
-    pathParts.pop(); // إزالة اسم الملف الحالي (مثل check.html)
+    pathParts.pop(); 
     const basePath = window.location.origin + pathParts.join('/');
     
-    // استخدام basePath كمسار افتراضي
     const HOME_PAGE = params.get('home') || (basePath.endsWith('/') ? basePath + 'home.html' : basePath + '/home.html');
     const LOGIN_PAGE = params.get('login') || (basePath.endsWith('/') ? basePath + 'index.html' : basePath + '/index.html');
     
-    // 2. رسائل ترحيبية متغيرة
+    // 2. رسائل ترحيبية متغيرة مع أيقونات ديناميكية وخيارات التلوين
     const messages = [
-      "🔍 جاري التحقق من بيانات الدخول...",
-      "🧭 يتم توجيهك الآن إلى الصفحة المناسبة...",
-      "⏳ يرجى الانتظار قليلاً..."
+      { text: "🔍 جاري التحقق من بيانات الدخول...", icon: "🔎", color: "success" },
+      { text: "🧭 يتم توجيهك الآن إلى الصفحة المناسبة...", icon: "🗺️", color: "info" },
+      { text: "⏳ يرجى الانتظار قليلاً...", icon: "⌛", color: "warn" }
     ];
     
-    // 3. المتغيرات الرئيسية للتحكم في الحالة
     let messageInterval = null;
     let index = 0;
     let redirecting = false; 
-    let checkTimeout = null; // متغير للتحكم في مهلة التحقق (الجديدة)
+    let checkTimeout = null; 
 
     const currentPage = window.location.pathname.split('/').pop();
     const cleanPage = currentPage.split('?')[0];
@@ -189,12 +269,15 @@
     function safeRedirect(target) {
         if (!redirecting) {
             redirecting = true;
-            
-            // إلغاء المهلة الاحتياطية في حال نجاح التحقق قبل انتهاء المهلة
             if (checkTimeout) clearTimeout(checkTimeout); 
-
             if (messageInterval) clearInterval(messageInterval);
-            document.body.style.transition = 'none';
+
+            // تطبيق تأثير التلاشي المتدرج على العناصر المرئية
+            const wrapper = document.querySelector('.spinner-wrapper');
+            const loadingText = document.getElementById("loadingText");
+            
+            if (wrapper) wrapper.classList.add('fade-out');
+            if (loadingText) loadingText.classList.add('fade-out-text'); // يمكن إضافة فئة خاصة للنص
             document.body.style.opacity = '0';
 
             setTimeout(() => {
@@ -203,32 +286,31 @@
                 } catch {
                     window.location.href = target;
                 }
-            }, 100); 
+            }, 300); // المهلة تتوافق مع مدة الـ transition في CSS 
         }
     }
 
     // 5. دالة إظهار رسالة الخطأ
     function handleErrorState(msgHtml) {
         const loadingTextElement = document.getElementById("loadingText");
-        const spinnerElement = document.querySelector('.spinner');
+        const wrapper = document.querySelector('.spinner-wrapper');
         const retryBtn = document.getElementById('retryBtn');
         
         if (messageInterval) clearInterval(messageInterval);
-        if (spinnerElement) spinnerElement.style.display = 'none';
+        if (wrapper) wrapper.style.display = 'none';
         
         if (loadingTextElement) {
-            loadingTextElement.innerHTML = msgHtml;
+            loadingTextElement.innerHTML = `❌ ${msgHtml}`;
             loadingTextElement.classList.add('error');
+            loadingTextElement.style.animation = 'none'; 
         }
         
         if (retryBtn) {
              retryBtn.style.display = 'inline-block';
-             // 6. 🧠 تحسين تجربة الخطأ: إضافة إعادة تلقائية
              const reloadTimeout = 8000; 
              retryBtn.textContent = `🔁 إعادة المحاولة (تلقائي بعد ${reloadTimeout/1000} ثوانٍ)`;
              retryBtn.addEventListener('click', () => location.reload()); 
              
-             // إعادة تلقائية
              setTimeout(() => {
                 if (!redirecting) location.reload();
              }, reloadTimeout);
@@ -245,13 +327,23 @@
             loadingTextElement.classList.add('hidden');
             
             setTimeout(() => {
-                loadingTextElement.textContent = messages[index];
+                const currentMsg = messages[index];
+                
+                loadingTextElement.textContent = `${currentMsg.icon} ${currentMsg.text}`;
+                
+                // 2. تطبيق تلوين الرسائل حسب نوعها
+                loadingTextElement.removeAttribute('data-color');
+                if (currentMsg.color !== 'success') {
+                    loadingTextElement.setAttribute('data-color', currentMsg.color);
+                }
+                
                 loadingTextElement.classList.remove('hidden');
                 index = (index + 1) % messages.length;
-                loadingTextElement.style.color = index === 1 ? '#007bff' : 'var(--success-color)';
-            }, 500);
+                
+                playChime(); // تشغيل الصوت عند ظهور رسالة جديدة
+            }, 300); 
           }
-        }, 1200);
+        }, 1800); 
     }
     
     
@@ -259,12 +351,11 @@
     function checkLoginStatus() {
         if (redirecting) return;
 
-        // 2. 🕒 ضبط أقصى مهلة في حال فشل localStorage أو الخطأ
         checkTimeout = setTimeout(() => {
             if (!redirecting) {
                 handleErrorState('⏱ انتهت مهلة التحقق، قد تكون هناك مشكلة في المتصفح أو الشبكة. يُرجى تحديث الصفحة.');
             }
-        }, 5000); // 5 ثوانٍ كأقصى مهلة
+        }, 5000); 
 
         if (typeof Storage === "undefined") {
           handleErrorState('🚫 المتصفح لا يدعم التخزين المحلي (localStorage). الرجاء استخدام متصفح مدعوم.');
@@ -288,7 +379,7 @@
 
             setTimeout(() => {
                 
-                if (checkTimeout) clearTimeout(checkTimeout); // إلغاء المهلة الاحتياطية
+                if (checkTimeout) clearTimeout(checkTimeout); 
 
                 if (isSessionValid) {
                     if (cleanPage !== 'home.html' && cleanPage !== HOME_PAGE.split('/').pop()) {
@@ -334,8 +425,11 @@
 </head>
 
 <body>
-  <img src="../assets/images/logo-icon.jpg" alt="شعار المؤسسة">
-  <div class="spinner"></div>
+  <div class="spinner-wrapper">
+    <div class="spinner"></div>
+    <img src="../assets/images/logo-icon.jpg" alt="شعار المؤسسة">
+  </div>
+
   <div id="loadingText" class="loading" role="status" aria-live="polite">🚀 جاري التحقق من بيانات الجلسة بأمان...</div>
   <button id="retryBtn" style="display:none;">🔁 إعادة المحاولة</button>
 </body>
