@@ -20,7 +20,7 @@ function logoutUser() {
   localStorage.removeItem(DEVICE_SERIAL_KEY);
   localStorage.removeItem(MARKETER_SESSION_KEY);
   localStorage.removeItem(OTP_PENDING_KEY);
-
+  localStorage.removeItem('stored_marketer_id');
   // يمكن حذف كل شيء إذا أردت مسح تام:
   // localStorage.clear();
 
