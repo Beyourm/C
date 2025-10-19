@@ -21,16 +21,6 @@
 
 </head>  
 <body>  
-
-
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="spinner"></div>
-  <div class="loading-text">جاري التحقق من الجلسة...</div>
-</div>
-
-
-
-    
     <div class="dashboard-container">  
         <header>  
             <h1>لوحة تحكم المسوِّق</h1>  
@@ -105,8 +95,7 @@
                 </div>  
           
                 <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>  
-                  <p>© 2025 مؤسسة كن أنت للتدريب والتأهيل</p>
-                    <button id="logoutBtn" class="btn-logout">تسجيل الخروج</button>
+
             </div>  
         </div>
     </div>  
@@ -139,9 +128,68 @@
     
     
 <!-- ================== Footer ================== -->
-
+<footer id="mainFooter" class="footer" style="display: none;">
+  <div class="footer-container">
+    <p>© 2025 مؤسسة كن أنت للتدريب والتأهيل</p>
+    <button id="logoutBtn" class="btn-logout">تسجيل الخروج</button>
+  </div>
+</footer>
 
 <!-- ================== CSS الفوتر ================== -->
+<style>
+
+.footer {
+    background-color: #0d3b14;
+    color: #ffffff;
+    padding: 15px 20px;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    font-family: 'Tajawal', sans-serif;
+    box-sizing: border-box; /* مهم للتأكد أن padding لا يزيد عن العرض */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap; /* هذا يسمح للعنصر أن يلتف عند صغر الشاشة */
+}
+
+.btn-logout {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    flex-shrink: 0; /* يمنع الزر من الانكماش */
+}
+
+.btn-logout:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+body {
+    padding-bottom: 70px;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+
+</style>
 
 <!-- ================== سكربت الفوتر وتسجيل الخروج ================== -->
 <script>
@@ -150,10 +198,8 @@
   const OTP_PENDING_KEY = 'otp_pending_login';
 
   document.addEventListener("DOMContentLoaded", function() {
-    // 1. تحديد زر تسجيل الخروج
-    // يتم البحث عن الزر بالـ ID الخاص به. 
-    // هذا السطر يجب أن يعمل طالما أن الزر موجود في HTML ولديه id="logoutBtn".
-    const logoutBtn = document.getElementById("logoutBtn"); 
+    const mainFooter = document.getElementById("mainFooter");
+    const logoutBtn = document.getElementById("logoutBtn");
 
     // التحقق من تسجيل الدخول
     const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
@@ -177,12 +223,11 @@
       mainFooter.style.display = "none";
 
       // إعادة التوجيه إلى صفحة تسجيل الدخول
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }
 
     if (logoutBtn) {
       logoutBtn.addEventListener("click", logoutUser);
-      console.error("Could not find logoutBtn element.");
     }
   });
 </script>
