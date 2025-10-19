@@ -150,8 +150,10 @@
   const OTP_PENDING_KEY = 'otp_pending_login';
 
   document.addEventListener("DOMContentLoaded", function() {
-    const mainFooter = document.getElementById("mainFooter");
-    const logoutBtn = document.getElementById("logoutBtn");
+    // 1. تحديد زر تسجيل الخروج
+    // يتم البحث عن الزر بالـ ID الخاص به. 
+    // هذا السطر يجب أن يعمل طالما أن الزر موجود في HTML ولديه id="logoutBtn".
+    const logoutBtn = document.getElementById("logoutBtn"); 
 
     // التحقق من تسجيل الدخول
     const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
@@ -180,6 +182,7 @@
 
     if (logoutBtn) {
       logoutBtn.addEventListener("click", logoutUser);
+      console.error("Could not find logoutBtn element.");
     }
   });
 </script>
