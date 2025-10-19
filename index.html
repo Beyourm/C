@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التحقق من حالة الدخول والأمان</title>
+  
+  <link rel="preload" href="../assets/fonts/tajawal.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../assets/fonts/tajawal.css"></noscript>
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <style>
+    /* 1. تعريف المتغيرات اللونية */
+    :root {
+        --success-color: #16a34a; 
+        --border-color: #d1d5db;
+        --error-color: #dc2626; 
+        --retry-btn-bg: #4f46e5;
+        --text-color: #333;
+    }
+
+    body {
+      font-family: "Tajawal", sans-serif;
+      background: radial-gradient(circle at top left, #d1fae5, #f0fdf4);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      margin: 0;
+      /* تحسين السرعة والأداء عبر تأجيل الحركة */
+      transition: opacity 0.5s ease;
+    }
+    
+    /* 2. دعم الوضع الليلي (Dark Mode) */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #eee;
+      }
+      body {
+        /* 4. 🌙 تحسين الانتقال بين الأوضاع (ليلي / نهاري) */
+        transition: background 0.6s ease, color 0.6s ease;
+        background: radial-gradient(circle at top left, #064e3b, #022c22);
+      }
+      .spinner {
+        border-color: #374151;
+        border-top-color: var(--success-color);
+      }
+      .error a {
+          color: #fca5a5 !important;
+      }
+    }
+
+    img {
+      width: 90px;
+      height: 90px; /* لضمان الشكل الدائري */
+      object-fit: cover; /* لضمان عدم تشوه الصورة */
+      margin-bottom: 20px;
+      border-radius: 50%; /* جعل الشعار دائرى */
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+      /* حركة اهتزاز خفيفة */
+      animation: 
+        float 3s ease-in-out infinite, 
+        spinLogo 12s linear infinite,
+        scalePulse 2.5s ease-in-out infinite; /* جعل الشعار يكبر ويصغر تدريجيا */
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes spinLogo {
+      to { transform: rotate(360deg); }
+    }
+    /* حركة الكبر والصغر التدريجي للشعار */
+    @keyframes scalePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--success-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(22, 163, 74, 0.2);
+    }
+
+    .loading {
+      font-size: 1.2rem;
+      color: var(--success-color);
+      font-weight: 500;
+      min-height: 1.2rem;
+      padding: 0 1rem;
+      word-break: break-word;
+      /* تحسين تجربة الرسائل بتأثير Fade */
+      transition: opacity 0.5s ease, color 0.6s ease; 
+      opacity: 1;
+    }
+    .loading.hidden {
+      opacity: 0;
+    }
+    
+    .error {
+      color: var(--error-color);
+      font-weight: bold;
+      animation: none;
+    }
+    .error a {
+        color: var(--error-color);
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    
+    #retryBtn {
+        background-color: var(--retry-btn-bg);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 20px;
+        transition: background-color 0.3s, transform 0.2s;
+        animation: pulse 1.5s infinite;
+    }
+    #retryBtn:hover {
+        background-color: #3730a3;
+        transform: scale(1.02);
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  
+  <script defer>
+    // 5. 🔒 تلميح أمني (اختياري) - لمنع الرجوع لصفحة التحقق بعد التوجيه
+    history.pushState(null, '', location.href);
+    window.onpopstate = () => history.go(1);
+
+    // 1. تحديد الثوابت والمتغيرات القابلة للتخصيص
+    const MARKETER_SESSION_KEY = 'marketer_session_data';
+    
+    const params = new URLSearchParams(window.location.search);
+    const delay = Number(params.get('delay')) || 1500; 
+    const SESSION_ID_PROPERTY = params.get('prop') || 'marketer_id'; 
+    
+    // 3. ⚙️ دعم مسار ديناميكي للصفحات
+    const pathParts = window.location.pathname.split('/');
+    pathParts.pop(); // إزالة اسم الملف الحالي (مثل check.html)
+    const basePath = window.location.origin + pathParts.join('/');
+    
+    // استخدام basePath كمسار افتراضي
+    const HOME_PAGE = params.get('home') || (basePath.endsWith('/') ? basePath + 'home.html' : basePath + '/home.html');
+    const LOGIN_PAGE = params.get('login') || (basePath.endsWith('/') ? basePath + 'index.html' : basePath + '/index.html');
+    
+    // 2. رسائل ترحيبية متغيرة
+    const messages = [
+      "🔍 جاري التحقق من بيانات الدخول...",
+      "🧭 يتم توجيهك الآن إلى الصفحة المناسبة...",
+      "⏳ يرجى الانتظار قليلاً..."
+    ];
+    
+    // 3. المتغيرات الرئيسية للتحكم في الحالة
+    let messageInterval = null;
+    let index = 0;
+    let redirecting = false; 
+    let checkTimeout = null; // متغير للتحكم في مهلة التحقق (الجديدة)
+
+    const currentPage = window.location.pathname.split('/').pop();
+    const cleanPage = currentPage.split('?')[0];
+
+    // 4. دالة التوجيه الآمن
+    function safeRedirect(target) {
+        if (!redirecting) {
+            redirecting = true;
+            
+            // إلغاء المهلة الاحتياطية في حال نجاح التحقق قبل انتهاء المهلة
+            if (checkTimeout) clearTimeout(checkTimeout); 
+
+            if (messageInterval) clearInterval(messageInterval);
+            document.body.style.transition = 'none';
+            document.body.style.opacity = '0';
+
+            setTimeout(() => {
+                try {
+                    window.location.replace(target);
+                } catch {
+                    window.location.href = target;
+                }
+            }, 100); 
+        }
+    }
+
+    // 5. دالة إظهار رسالة الخطأ
+    function handleErrorState(msgHtml) {
+        const loadingTextElement = document.getElementById("loadingText");
+        const spinnerElement = document.querySelector('.spinner');
+        const retryBtn = document.getElementById('retryBtn');
+        
+        if (messageInterval) clearInterval(messageInterval);
+        if (spinnerElement) spinnerElement.style.display = 'none';
+        
+        if (loadingTextElement) {
+            loadingTextElement.innerHTML = msgHtml;
+            loadingTextElement.classList.add('error');
+        }
+        
+        if (retryBtn) {
+             retryBtn.style.display = 'inline-block';
+             // 6. 🧠 تحسين تجربة الخطأ: إضافة إعادة تلقائية
+             const reloadTimeout = 8000; 
+             retryBtn.textContent = `🔁 إعادة المحاولة (تلقائي بعد ${reloadTimeout/1000} ثوانٍ)`;
+             retryBtn.addEventListener('click', () => location.reload()); 
+             
+             // إعادة تلقائية
+             setTimeout(() => {
+                if (!redirecting) location.reload();
+             }, reloadTimeout);
+        }
+    }
+
+    
+    // 6. دالة تحديث نص التحميل
+    function updateLoadingText() {
+        const loadingTextElement = document.getElementById("loadingText");
+        
+        messageInterval = setInterval(() => {
+          if (loadingTextElement && !loadingTextElement.classList.contains('error')) {
+            loadingTextElement.classList.add('hidden');
+            
+            setTimeout(() => {
+                loadingTextElement.textContent = messages[index];
+                loadingTextElement.classList.remove('hidden');
+                index = (index + 1) % messages.length;
+                loadingTextElement.style.color = index === 1 ? '#007bff' : 'var(--success-color)';
+            }, 500);
+          }
+        }, 1200);
+    }
+    
+    
+    // 7. دالة التحقق من الجلسة وإعادة التوجيه
+    function checkLoginStatus() {
+        if (redirecting) return;
+
+        // 2. 🕒 ضبط أقصى مهلة في حال فشل localStorage أو الخطأ
+        checkTimeout = setTimeout(() => {
+            if (!redirecting) {
+                handleErrorState('⏱ انتهت مهلة التحقق، قد تكون هناك مشكلة في المتصفح أو الشبكة. يُرجى تحديث الصفحة.');
+            }
+        }, 5000); // 5 ثوانٍ كأقصى مهلة
+
+        if (typeof Storage === "undefined") {
+          handleErrorState('🚫 المتصفح لا يدعم التخزين المحلي (localStorage). الرجاء استخدام متصفح مدعوم.');
+          return;
+        }
+        
+        try {
+            const sessionData = localStorage.getItem(MARKETER_SESSION_KEY);
+            let session = null;
+            
+            if (sessionData) {
+                try {
+                    session = JSON.parse(sessionData);
+                } catch (e) {
+                    console.warn("⚠️ بيانات الجلسة تالفة. تم مسحها تلقائيًا.");
+                    localStorage.removeItem(MARKETER_SESSION_KEY);
+                }
+            }
+            
+            const isSessionValid = session && typeof session === 'object' && String(session[SESSION_ID_PROPERTY] || '').trim();
+
+            setTimeout(() => {
+                
+                if (checkTimeout) clearTimeout(checkTimeout); // إلغاء المهلة الاحتياطية
+
+                if (isSessionValid) {
+                    if (cleanPage !== 'home.html' && cleanPage !== HOME_PAGE.split('/').pop()) {
+                        safeRedirect(HOME_PAGE);
+                    }
+                } else {
+                    if (cleanPage !== 'index.html' && cleanPage !== LOGIN_PAGE.split('/').pop()) {
+                        safeRedirect(LOGIN_PAGE);
+                    }
+                }
+            }, delay); 
+            
+            if (params.get('debug') === 'true') {
+              console.log('🧩 وضع المطوّر مُفعّل.');
+              console.log(`🧩 حالة الجلسة: ${isSessionValid ? 'نشطة' : 'غير نشطة'}`);
+              console.log('🧩 بيانات الجلسة:', session);
+              console.log('🧩 صفحة الهدف:', isSessionValid ? HOME_PAGE : LOGIN_PAGE);
+            }
+            
+        } catch (error) {
+            handleErrorState(`⚠️ حدث خطأ فادح: ${error.message}.<br>يمكنك <a href="#" onclick="localStorage.clear();location.reload()">مسح بيانات الدخول</a> والمحاولة مجددًا.`);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const logoParam = params.get("logo");
+        const imgElement = document.querySelector("img");
+        if (logoParam && imgElement) {
+          imgElement.src = logoParam;
+        }
+        
+        window.addEventListener('storage', (e) => {
+            if (e.key === MARKETER_SESSION_KEY && !e.newValue) {
+                console.log('🔒 تسجيل خروج من تبويب آخر. إعادة التوجيه لصفحة الدخول.');
+                safeRedirect(LOGIN_PAGE);
+            }
+        });
+        
+        updateLoadingText();
+        checkLoginStatus();
+    });
+  </script>
+</head>
+
+<body>
+  <img src="../assets/images/logo-icon.jpg" alt="شعار المؤسسة">
+  <div class="spinner"></div>
+  <div id="loadingText" class="loading" role="status" aria-live="polite">🚀 جاري التحقق من بيانات الجلسة بأمان...</div>
+  <button id="retryBtn" style="display:none;">🔁 إعادة المحاولة</button>
+</body>
+</html>
