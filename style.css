@@ -435,53 +435,51 @@
 
 
 .footer {
-    background-color: #0d3b14;
-    color: #ffffff;
-    padding: 15px 20px;
-    text-align: center;
-    width: 100%;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
-    font-family: 'Tajawal', sans-serif;
-    box-sizing: border-box;
+  background-color: #0d3b14;
+  color: #ffffff;
+  padding: 15px 20px;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+  font-family: 'Tajawal', sans-serif;
+
+  /* إزالة أي position fixed */
+  position: relative;
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap; /* السماح للعنصر بالانتقال لسطر جديد في الشاشات الصغيرة */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .btn-logout {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-logout:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* مساحة أسفل الصفحة لتجنب تداخل المحتوى مع الفوتر */
+body {
+  margin: 0;
+  padding-bottom: 80px; /* يكفي مساحة الفوتر */
 }
 
 @media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        text-align: center;
-    }
+  .footer-container {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
-
-
-
-
-
-
-
