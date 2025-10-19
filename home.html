@@ -96,6 +96,13 @@
           
                 <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>  
 
+                <div style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #eee;">
+                    <button onclick="logoutUser()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                        <i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i> تسجيل الخروج
+                    </button>
+                </div>
+                
+
             </div>  
         </div>
     </div>  
@@ -124,11 +131,17 @@
                 });
             }
         });
+        
+        // 💥 الكود الجديد رقم 1: دالة تسجيل الخروج ومسح الـ localStorage
+        function logoutUser() {
+            // مسح معرف المسوق المخزن في الـ localStorage
+            localStorage.removeItem('stored_marketer_id');
+            console.log('Marketer ID cleared. Logging out.');
+            
+            // ⚠️ قم بتغيير هذا الرابط لتوجيه المستخدم إلى صفحة تسجيل الدخول أو الصفحة الرئيسية
+            window.location.href = '../index.html'; 
+        }
     </script>
-    
-    
-    
-    
     
     <script src="marketer_tracker.js"></script>   
     <script src="home-logic.js"></script>   
