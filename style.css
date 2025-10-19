@@ -378,3 +378,54 @@
   
 
 
+
+
+/*ملف الدوائر */
+
+
+
+/* ================== شاشة التحميل ================== */
+#loadingOverlay {
+  display: none; /* مخفي افتراضياً */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9); /* خلفية نصف شفافة */
+  z-index: 9999; /* فوق كل العناصر */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* دائرة التحميل */
+#loadingOverlay .spinner {
+  border: 6px solid #f3f3f3; /* لون الإطار الخارجي */
+  border-top: 6px solid #28a745; /* لون الجزء المتحرك */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+/* نص التحميل */
+#loadingOverlay .loading-text {
+  font-family: 'Tajawal', sans-serif;
+  color: #555;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* حركة الدوران */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
