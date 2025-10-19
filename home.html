@@ -127,7 +127,7 @@
     </script>
     
     
-    <!-- ================== Footer عصري ================== -->
+<!-- ================== Footer ================== -->
 <footer id="mainFooter" class="footer" style="display: none;">
   <div class="footer-container">
     <p>© 2025 مؤسسة كن أنت للتدريب والتأهيل</p>
@@ -185,25 +185,48 @@
   }
 </style>
 
-<!-- ================== سكربت التحقق من تسجيل الدخول ================== -->
-<script src="logout.js"></script>
+<!-- ================== سكربت الفوتر وتسجيل الخروج ================== -->
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const MARKETER_SESSION_KEY = 'marketer_session_data'; // المفتاح المستخدم
-    const mainFooter = document.getElementById("mainFooter");
+  const DEVICE_SERIAL_KEY = 'marketer_device_serial';
+  const MARKETER_SESSION_KEY = 'marketer_session_data';
+  const OTP_PENDING_KEY = 'otp_pending_login';
 
-    // تحقق من تسجيل الدخول
+  document.addEventListener("DOMContentLoaded", function() {
+    const mainFooter = document.getElementById("mainFooter");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    // التحقق من تسجيل الدخول
     const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
 
     if (isLoggedIn) {
       mainFooter.style.display = "block"; // إظهار الفوتر
     }
+
+    // دالة تسجيل الخروج
+    function logoutUser() {
+      const confirmLogout = confirm("هل أنت متأكد أنك تريد تسجيل الخروج؟");
+      if (!confirmLogout) return;
+
+      // حذف بيانات الجلسة
+      localStorage.removeItem(DEVICE_SERIAL_KEY);
+      localStorage.removeItem(MARKETER_SESSION_KEY);
+      localStorage.removeItem(OTP_PENDING_KEY);
+      localStorage.removeItem('stored_marketer_id');
+
+      // إخفاء الفوتر فورًا
+      mainFooter.style.display = "none";
+
+      // إعادة التوجيه إلى صفحة تسجيل الدخول
+      window.location.href = "index.html";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", logoutUser);
+    }
   });
 </script>
-    
     
     <script src="marketer_tracker.js"></script>   
     <script src="home-logic.js"></script>   
 </body>  
 </html>
- 
