@@ -248,7 +248,9 @@
     const basePath = window.location.origin + pathParts.join('/');
     
     const HOME_PAGE = params.get('home') || (basePath.endsWith('/') ? basePath + 'home.html' : basePath + '/home.html');
-    const LOGIN_PAGE = params.get('login') || (basePath.endsWith('/') ? basePath + 'index.html' : basePath + '/index.html');
+    
+    // 🎯 تم التعديل هنا: استخدام 'login.html' كقيمة افتراضية لصفحة الدخول
+    const LOGIN_PAGE = params.get('login') || (basePath.endsWith('/') ? basePath + 'login.html' : basePath + '/login.html');
     
     // 2. رسائل ترحيبية متغيرة مع أيقونات ديناميكية وخيارات التلوين
     const messages = [
@@ -381,8 +383,8 @@
                 
                 if (checkTimeout) clearTimeout(checkTimeout); 
                 
-                // 🎯 التعديل الرئيسي: إزالة الشروط التي تمنع التوجيه إذا كان المستخدم على الصفحة المطلوبة بالفعل.
-                // هذا يضمن توجيه المستخدم بشكل مطلق بمجرد التحقق من الجلسة.
+                // ✅ الجزء المصحح في الرد السابق (لضمان التوجيه دائماً)
+                // ✅ هذا المنطق يتأكد من التوجيه سواء كنت مسجلاً أو لا
                 if (isSessionValid) {
                     safeRedirect(HOME_PAGE);
                 } else {
