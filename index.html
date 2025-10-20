@@ -380,15 +380,13 @@
             setTimeout(() => {
                 
                 if (checkTimeout) clearTimeout(checkTimeout); 
-
+                
+                // 🎯 التعديل الرئيسي: إزالة الشروط التي تمنع التوجيه إذا كان المستخدم على الصفحة المطلوبة بالفعل.
+                // هذا يضمن توجيه المستخدم بشكل مطلق بمجرد التحقق من الجلسة.
                 if (isSessionValid) {
-                    if (cleanPage !== 'home.html' && cleanPage !== HOME_PAGE.split('/').pop()) {
-                        safeRedirect(HOME_PAGE);
-                    }
+                    safeRedirect(HOME_PAGE);
                 } else {
-                    if (cleanPage !== 'index.html' && cleanPage !== LOGIN_PAGE.split('/').pop()) {
-                        safeRedirect(LOGIN_PAGE);
-                    }
+                    safeRedirect(LOGIN_PAGE);
                 }
             }, delay); 
             
