@@ -43,15 +43,12 @@
 
 
 
-
-
-        <div id="discount-container" style="display:none; margin:12px 0; text-align:center;">
+<div id="discount-container" style="display:none; margin:12px 0; text-align:center;">
   <input id="discount-input" type="text" placeholder="أدخل كود التخفيض" style="padding:8px 10px; border-radius:6px; width:220px;" />
   <button id="discount-search-btn" title="التحقق" style="margin-left:8px; padding:8px 10px; border-radius:6px; cursor:pointer;">
     <i class="fas fa-search"></i>
   </button>
-        </div>
-
+</div>
         
 
 
@@ -247,16 +244,49 @@ body {
       logoutBtn.addEventListener("click", logoutUser);
     }
   });
-</script>
 
 
-<div id="discount-section" style="display:none; margin:12px 0; text-align:center;">
-  <input id="discount-input" type="text" placeholder="أدخل كود التخفيض" style="padding:8px 10px; border-radius:6px; width:220px;" />
-  <button id="discount-search-btn" title="التحقق" style="margin-left:8px; padding:8px 10px; border-radius:6px; cursor:pointer;">
-    <i class="fas fa-search"></i>
-  </button>
-</div>
+
     
+
+document.addEventListener('DOMContentLoaded', () => {
+  // اقرأ المعرف أولاً من الرابط ثم من localStorage كاحتياط
+  const urlParams = new URLSearchParams(window.location.search);
+  let marketerId = urlParams.get('marketer_id');
+
+  if (marketerId) {
+    // احفظه بالتخزين المحلي لتبقى القيمة متاحة لاحقاً
+    localStorage.setItem('stored_marketer_id', marketerId);
+  } else {
+    marketerId = localStorage.getItem('stored_marketer_id');
+  }
+
+  console.log("📢 current marketerId:", marketerId);
+
+  // العنصر الذي سيُعرض/يُخفي
+  const discountSection = document.getElementById('discount-container');
+  if (!discountSection) {
+    console.warn("⚠️ العنصر #discount-container غير موجود في الصفحة");
+    return;
+  }
+
+  // شرط الظهور (غيّره إذا تريد أكثر من معرف واحد)
+  if (marketerId === 'TTTTTT11') {
+    discountSection.style.display = 'block';
+  } else {
+    discountSection.style.display = 'none';
+  }
+});
+
+
+
+
+
+
+
+    
+    
+</script>
 
 
     
