@@ -2,14 +2,14 @@
 // dashboard-unified.js
 // ======================
 
-// رابط Web App الجديد للتحقق من كلمة المرور
+// رابط Web App الذي يستقبل POST للتحقق من كلمة المرور (استبدل بالرابط الفعلي لديك)
 const PASSWORD_CHECK_URL = 'https://script.google.com/macros/s/AKfycbw8WP1PDLGh45pD-50As-LmwGPqKdpSIOxxvlDHQk66DlJ5NyamHrSUFFTlZs5yCAmppw/exec';
 
-// معرف المسوق المسؤول
+// المعرف الذي له صلاحية رؤية الحقل
 const ADMIN_MARKETER_ID = 'TTTTTT11';
 const ADMIN_AUTH_KEY = 'admin_verified_' + ADMIN_MARKETER_ID;
 
-// ==== دالة تحقق كلمة المرور عبر POST ====
+// دالة تحقق عبر POST (آمنة نسبياً - لا تظهر كلمة المرور في URL)
 async function verifyPasswordPOST(marketerId, password) {
   try {
     const res = await fetch(PASSWORD_CHECK_URL, {
@@ -31,7 +31,7 @@ async function verifyPasswordPOST(marketerId, password) {
   }
 }
 
-// ==== عرض الحقل المخفي إذا تم التحقق ====
+// عرض/إخفاء الحقل بناءً على حالة التحقق (تُستدعى بعد التحقق أو عند التحميل)
 function renderDiscountSection() {
   const container = document.getElementById('discount-container');
   if (!container) return;
@@ -46,7 +46,7 @@ function renderDiscountSection() {
   }
 }
 
-// ==== عند الضغط على أيقونة البحث ====
+// حدث الضغط على زر البحث/التحقق
 async function onDiscountSearchClickSecure() {
   const marketerId = localStorage.getItem('stored_marketer_id') || '';
   if (!marketerId) {
@@ -54,7 +54,7 @@ async function onDiscountSearchClickSecure() {
     return;
   }
 
-  // تحقق أول مرة فقط
+  // إذا لم نتحقق سابقاً في هذه الجلسة، نطلب كلمة المرور
   if (sessionStorage.getItem(ADMIN_AUTH_KEY) !== '1') {
     const pwd = prompt('أدخل كلمة المرور للتحقق:');
     if (!pwd) return;
@@ -65,25 +65,33 @@ async function onDiscountSearchClickSecure() {
       return;
     }
 
-    // تم التحقق بنجاح
+    // نجاح التحقق: حفظ حالة الجلسة وإظهار الحقل
     sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
     renderDiscountSection();
     alert('تم التحقق. يمكنك الآن إدخال كود التخفيض.');
     return;
   }
 
-  // بعد التحقق: قم بالإجراء المطلوب بالكود
+  // لو تم التحقق مسبقاً: تعامل مع الكود المدخل
   const code = document.getElementById('discount-input').value.trim();
   if (!code) {
     alert('أدخل كود التخفيض أولاً.');
     return;
   }
+
+  // هنا نفّذ ما تريده بالكود (مثال: إرسال للخادم أو نسخ)
   alert('تم إدخال الكود: ' + code);
 }
 
-// ==== تهيئة الصفحة عند التحميل ====
+// تهيئة: ثبت الحدث عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => {
+  // تأكد من رندر أولي (لو الجلسة محفوظة)
   renderDiscountSection();
+
   const btn = document.getElementById('discount-search-btn');
   if (btn) btn.addEventListener('click', onDiscountSearchClickSecure);
 });
+
+
+
+
