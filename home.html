@@ -1,46 +1,44 @@
 <!doctype html>
 
-<html lang="ar" dir="rtl">  
-<head>  
-    <meta charset="utf-8" />  
-    <meta name="viewport" content="width=device-width,initial-scale=1" />  
-    <title>لوحة تحكم المسوِّق</title>   
-    <meta property="og:title" content="لوحة تحكم المسوِّق" />   
-    <meta property="og:description" content="راجع إحصائيات إحالتك عبر الرابط الخاص بك." />   
-    <meta property="og:image" content="https://skillia.netlify.app/images/photo.jpg" />  
-    <meta property="og:url" content="https://sklilia.netlify.app/Trainees_Records" />  
-    <meta property="og:type" content="website" />  
-    <meta property="og:locale" content="ar_AR" />  
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../assets/fonts/tajawal.css">  
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>لوحة تحكم المسوِّق</title>
+    <meta property="og:title" content="لوحة تحكم المسوِّق" />
+    <meta property="og:description" content="راجع إحصائيات إحالتك عبر الرابط الخاص بك." />
+    <meta property="og:image" content="https://skillia.netlify.app/images/photo.jpg" />
+    <meta property="og:url" content="https://sklilia.netlify.app/Trainees_Records" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_AR" />
 
-    <link rel="stylesheet" href="table-styles.css">   
-    <link rel="stylesheet" href="style.css">   
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/tajawal.css">
 
-</head>  
-<body>  
-    <div class="dashboard-container">  
-        <header>  
-            <h1>لوحة تحكم المسوِّق</h1>  
-            <p id="marketer-id-display">الرجاء إدخال المعرّف في الرابط</p>  
+    <link rel="stylesheet" href="table-styles.css">
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>لوحة تحكم المسوِّق</h1>
+            <p id="marketer-id-display">جارٍ تحميل المعرّف والبيانات...</p>
               <div class="menu-toggle" id="menu-toggle">
     <i class="fas fa-bars"></i>
   </div>
 
-  
+
   <nav>
         <a href="../contact.html">تواصل معنا</a>
         <a href="w-c.html"> سحب العمولات</a>
-        
+
         <button id="show-courses-btn">عرض الدورات المتاحة</button>
     </nav>
-    
-      
-            
-        </header>  
 
+
+        </header>
 
 
 <div id="discount-container" style="display:none; margin:12px 0; text-align:center;">
@@ -49,84 +47,105 @@
     <i class="fas fa-search"></i>
   </button>
 </div>
-        
 
 
-
-        
-        <div class="content">  
-            <div id="statusMessage" class="loading" style="text-align:center; color:#555;">  
-                <span class="spinner"></span> جارٍ جلب البيانات...  
-            </div>  
+            <div id="statusMessage" class="loading" style="text-align:center; color:#555;">
+                <span class="spinner"></span> جارٍ جلب البيانات...
+            </div>
 
             <div id="dashboardContent" style="display:none;">
 
-                <div class="stats-grid">  
-                    <div class="stats-card">  
-                    	
-                        <h2><i class="fas fa-users card-title-icon"></i> إجمالي عدد المسجّلين عبر الرابط الخاص بك</h2>  
-                        <span class="stats-count" id="referrals-count">0</span>  
-                    </div>  
-                    <div class="stats-card active-card">  
-                        <h2><i class="fas fa-check-circle card-title-icon"></i> المسجّلون النشطون (الحالة Y)</h2>  
-                        <span class="stats-count" id="active-referrals-count">0</span>  
-                    </div>  
-                </div>  
-                
-                <div class="card-wrapper" style="margin-bottom: 25px;">
-                    <iframe id="competition-card-iframe" src="Balance.html" 
-                            style="width: 100%; max-width: 420px; height: 580px; border: none; overflow: hidden; border-radius: 25px; margin: 0 auto; display: block;">
-                    </iframe>
+                <div class="stats-grid">
+                    <div class="stats-card">
+
+                        <h2><i class="fas fa-users card-title-icon"></i> إجمالي عدد المسجّلين عبر الرابط الخاص بك</h2>
+                        <span class="stats-count" id="referrals-count">0</span>
+                    </div>
+                    <div class="stats-card active-card">
+                        <h2><i class="fas fa-check-circle card-title-icon"></i> المسجّلون النشطون (الحالة Y)</h2>
+                        <span class="stats-count" id="active-referrals-count">0</span>
+                    </div>
                 </div>
-                
-                <div class="stats-card" style="margin-bottom: 20px;">  
-                    <h2 style="margin-top: 0;"><i class="fas fa-link card-title-icon"></i> رابط الإحالة الخاص بك</h2>  
-                    <div class="referral-link-box" id="referral-link-box" title="اضغط لنسخ الرابط">  
-                        <span id="referral-link-text">...</span>  
-                        <button class="copy-btn" id="copy-btn"><i class="fas fa-copy"></i> نسخ</button>  
-                    </div>  
-                    <p style="font-size: 12px; color: #555; margin-top: 10px;">انقر على الرابط أو الزر لنسخه ومشاركته.</p>  
-                </div>  
 
-                <h2 style="color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin-bottom: 20px;"><i class="fas fa-address-card card-title-icon"></i> البيانات الشخصية</h2>  
-                <div class="details-card" id="personal-details">  
-                </div>  
+                <div class="card-wrapper" style="margin-bottom: 25px;">
+                    <div class="card" id="balance-card">
+                        <h2 class="card-title">رصيدي الحالي</h2>
+                        <div class="balance" id="current-balance"><div class="loader"></div></div>
 
-                <div class="referrals-section">  
-                    <div class="referrals-header">  
-                        <div class="top-row">  
-                            <h2 style="margin: 0; color: var(--primary-color); font-size: 18px; font-weight: 700;">قائمة المسجّلين عبر الرابط</h2>  
-                            <button class="download-btn" id="download-btn" style="display:none;">  
-                                <i class="fas fa-download" style="margin-left: 5px; color: var(--primary-color);"></i>  
-                                تنزيل كملف CSV  
-                            </button>  
-                        </div>  
-                        <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، البريد الإلكتروني..." oninput="filterReferrals()">  
-                    </div>  
+                        <div class="sub-stats">
+                          <div class="total">👥 إجمالي: <span id="total-members">...</span></div>
+                          <div class="active">✅ نشطون: <span id="active-members">...</span></div>
+                          <div class="inactive">❌ خاملون: <span id="inactive-members">...</span></div>
+                        </div>
 
-                    <div class="cards-container" id="referrals-table-container">  
-                    </div>  
-                </div>  
-          
-                <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>  
+                        <div class="donut" id="statusDonut"></div>
 
-            </div>  
+                        <div class="current-rank">
+                          🎯 مركزك الحالي: <span id="current-rank">...</span>
+                        </div>
+
+                        <div class="top3">
+                          <h3>🏆 أفضل 3 مسوّقين</h3>
+                          <ol id="top3-list">
+                            <li>...</li>
+                            <li>...</li>
+                            <li>...</li>
+                          </ol>
+                        </div>
+
+                        <button id="refresh-balance">🔄 تحديث البيانات</button>
+                    </div>
+                </div>
+                <div class="stats-card" style="margin-bottom: 20px;">
+                    <h2 style="margin-top: 0;"><i class="fas fa-link card-title-icon"></i> رابط الإحالة الخاص بك</h2>
+                    <div class="referral-link-box" id="referral-link-box" title="اضغط لنسخ الرابط">
+                        <span id="referral-link-text">...</span>
+                        <button class="copy-btn" id="copy-btn"><i class="fas fa-copy"></i> نسخ</button>
+                    </div>
+                    <p style="font-size: 12px; color: #555; margin-top: 10px;">انقر على الرابط أو الزر لنسخه ومشاركته.</p>
+                </div>
+
+                <h2 style="color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin-bottom: 20px;"><i class="fas fa-address-card card-title-icon"></i> البيانات الشخصية</h2>
+                <div class="details-card" id="personal-details">
+                </div>
+
+                <div class="referrals-section">
+                    <div class="referrals-header">
+                        <div class="top-row">
+                            <h2 style="margin: 0; color: var(--primary-color); font-size: 18px; font-weight: 700;">قائمة المسجّلين عبر الرابط</h2>
+                            <button class="download-btn" id="download-btn" style="display:none;">
+                                <i class="fas fa-download" style="margin-left: 5px; color: var(--primary-color);"></i>
+                                تنزيل كملف CSV
+                            </button>
+                        </div>
+                        <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، البريد الإلكتروني..." oninput="filterReferrals()">
+                    </div>
+
+                    <div class="cards-container" id="referrals-table-container">
+                    </div>
+                </div>
+
+                <p style="text-align:center; font-size:12px; color:#888; margin-top: 30px;">البيانات محدثة تلقائيًا من نظام التسجيل الرسمي لمؤسسة كن أنت.</p>
+
+            </div>
         </div>
-    </div>  
-    <div id="toastNotification" class="toast-notification">  
-        <i class="fas fa-check-circle"></i> تم نسخ الرابط إلى الحافظة!  
-    </div>  
-    
+    </div>
+    <div id="toastNotification" class="toast-notification">
+        <i class="fas fa-check-circle"></i> تم نسخ الرابط إلى الحافظة!
+    </div>
+    <div id="toast" class="toast">تم تحديث البيانات بنجاح ✅</div>
+
+
         <dialog id="courses-dialog">
-        <div class="dialog-content-wrapper"> 
-            <iframe src="dialog.html"></iframe> 
+        <div class="dialog-content-wrapper">
+            <iframe src="dialog.html"></iframe>
             <form method="dialog">
                 <button class="close-btn">إغلاق</button>
             </form>
         </div>
     </dialog>
-    
-    
+
+
       <script>
         document.addEventListener('DOMContentLoaded', function() {
             const showCoursesBtn = document.getElementById('show-courses-btn');
@@ -139,9 +158,8 @@
             }
         });
     </script>
-    
-    
-<!-- ================== Footer ================== -->
+
+
 <footer id="mainFooter" class="footer" style="display: none;">
   <div class="footer-container">
     <p>© 2025 مؤسسة كن أنت للتدريب والتأهيل</p>
@@ -149,7 +167,6 @@
   </div>
 </footer>
 
-<!-- ================== CSS الفوتر ================== -->
 <style>
 
 .footer {
@@ -160,7 +177,7 @@
     width: 100%;
     box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
     font-family: 'Tajawal', sans-serif;
-    box-sizing: border-box; /* مهم للتأكد أن padding لا يزيد عن العرض */
+    box-sizing: border-box;
 }
 
 .footer-container {
@@ -169,7 +186,7 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    flex-wrap: wrap; /* هذا يسمح للعنصر أن يلتف عند صغر الشاشة */
+    flex-wrap: wrap;
 }
 
 .btn-logout {
@@ -181,7 +198,7 @@
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
-    flex-shrink: 0; /* يمنع الزر من الانكماش */
+    flex-shrink: 0;
 }
 
 .btn-logout:hover {
@@ -203,96 +220,732 @@ body {
 }
 
 
+/* ===============================
+   CSS مخصص لبطاقة الرصيد والمنافسة المدمجة (Balance.html)
+   =============================== */
+:root {
+  --primary-color: #007b83; /* لون أساسي جديد */
+  --accent-color: #f0f4f8; /* لون ثانوي */
+}
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffffff, var(--accent-color));
+  border-radius: 25px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 100%; /* اجعل العرض 100% ليناسب الحاوية */
+  max-width: 420px; /* تحديد أقصى عرض كما كان في الإطار */
+  transition: all 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,123,131,0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.card:hover::before { opacity: 1; }
+
+.card-title {
+  font-size: 1.6rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+.balance {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.sub-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+.sub-stats div { padding: 8px 12px; border-radius: 12px; }
+.sub-stats .total { background: #cce5ff; color: #004085; }
+.sub-stats .active { background: #d4edda; color: #155724; }
+.sub-stats .inactive { background: #f8d7da; color: #721c24; }
+
+.donut {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(#28a745 0% 50%, #dc3545 50% 100%);
+  margin: 10px auto;
+  transition: background 1s ease;
+}
+
+#refresh-balance {
+  margin-top: 10px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#refresh-balance:hover { background: #005f63; }
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 1000;
+}
+.toast.show { opacity: 1; }
+
+.current-rank {
+  font-size: 1.2rem;
+  margin: 15px 0;
+  font-weight: bold;
+  color: #ff6600;
+}
+
+.top3 {
+  margin-bottom: 15px;
+}
+.top3 h3 { margin-bottom: 8px; font-size: 1.2rem; color: var(--primary-color); }
+.top3 ol { padding-left: 20px; text-align: right; }
+.top3 li { margin-bottom: 5px; font-weight: bold; }
+.top3 li:nth-child(1) { color: #FFD700; }
+.top3 li:nth-child(2) { color: #C0C0C0; }
+.top3 li:nth-child(3) { color: #cd7f32; }
+
 </style>
 
-<!-- ================== سكربت الفوتر وتسجيل الخروج ================== -->
 <script>
   const DEVICE_SERIAL_KEY = 'marketer_device_serial';
   const MARKETER_SESSION_KEY = 'marketer_session_data';
   const OTP_PENDING_KEY = 'otp_pending_login';
+  // مفتاح المعرّف المخزّن بواسطة marketer_tracker.js
+  const LOCAL_MARKETER_KEY = 'stored_marketer_id'; 
+
+
+  // ------------------------------------------------------------------
+  // ** الدوال الأساسية لجلب المعرّف وتشغيل لوحة التحكم **
+  // ------------------------------------------------------------------
+  function getMarketerId() {
+      // 🚨 الآن، مصدر المعرّف الوحيد هو localStorage
+      return localStorage.getItem(LOCAL_MARKETER_KEY);
+  }
+
+  function initDashboard() {
+      const marketerId = getMarketerId();
+      
+      if (marketerId) {
+          console.log("Marketer ID loaded from storage:", marketerId);
+          // لا حاجة للتخزين هنا، فهو موجود بالفعل
+          fetchData(marketerId);
+          initBalanceDisplay();
+          renderDiscountSection(); 
+      } else {
+          // تم تعديل رسالة الخطأ لتوجيه المستخدم
+          updateStatus(`
+              ⚠️ **المعرّف مفقود.** الرجاء فتح لوحة التحكم مرة أخرى عبر رابط الإحالة الخاص بك (الذي يحتوي على marketer_id) لتخزين المعرّف تلقائياً.
+              <br>
+              <span style="font-size: 0.9em;">
+              إذا كنت تفتح اللوحة لأول مرة، يجب استخدام رابط الإحالة.
+              </span>
+              `, 'error');
+          marketerIdDisplay.innerHTML = `المعرّف مفقود (الرجاء استخدام رابط الإحالة).`;
+          dashboardContent.style.display = 'none';
+          document.getElementById('current-balance').textContent = '...';
+      }
+  }
+
+  // ------------------------------------------------------------------
+  // ** منطق الفوتر وتسجيل الخروج **
+  // ------------------------------------------------------------------
 
   document.addEventListener("DOMContentLoaded", function() {
     const mainFooter = document.getElementById("mainFooter");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // التحقق من تسجيل الدخول
+    // التحقق من تسجيل الدخول (لإظهار/إخفاء الفوتر)
     const isLoggedIn = localStorage.getItem(MARKETER_SESSION_KEY);
-
     if (isLoggedIn) {
-      mainFooter.style.display = "block"; // إظهار الفوتر
+      mainFooter.style.display = "block";
     }
 
-    // دالة تسجيل الخروج
     function logoutUser() {
       const confirmLogout = confirm("هل أنت متأكد أنك تريد تسجيل الخروج؟");
       if (!confirmLogout) return;
 
-      // حذف بيانات الجلسة
       localStorage.removeItem(DEVICE_SERIAL_KEY);
       localStorage.removeItem(MARKETER_SESSION_KEY);
       localStorage.removeItem(OTP_PENDING_KEY);
-      localStorage.removeItem('stored_marketer_id');
+      localStorage.removeItem(LOCAL_MARKETER_KEY); // إزالة المعرف المخزن
+      localStorage.removeItem('dashboardStats');
 
-      // إخفاء الفوتر فورًا
       mainFooter.style.display = "none";
-
-      // إعادة التوجيه إلى صفحة تسجيل الدخول
       window.location.href = "login.html";
     }
 
     if (logoutBtn) {
       logoutBtn.addEventListener("click", logoutUser);
     }
+    
+    // 🚨 التشغيل التلقائي للدالة الأساسية عند تحميل الصفحة
+    initDashboard();
   });
 
+// ===============================================
+// --- منطق إظهار حقل التخفيض (من dashboard-unified.js) ---
+// ===============================================
 
+  const PASSWORD_CHECK_URL = 'https://script.google.com/macros/s/AKfycbw8WP1PDLGh45pD-50As-LmwGPqKdpSIOxxvlDHQk66DlJ5NyamHrSUFFTlZs5yCAmppw/exec';
+  const ADMIN_MARKETER_ID = 'TTTTTT11';
+  const ADMIN_AUTH_KEY = 'admin_verified_' + ADMIN_MARKETER_ID;
 
-    
+  async function verifyPasswordPOST(marketerId, password) {
+    // ... (رمز التحقق نفسه) ...
+    try {
+      const res = await fetch(PASSWORD_CHECK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ marketerId: marketerId, password: password })
+      });
 
-document.addEventListener('DOMContentLoaded', () => {
-  // اقرأ المعرف أولاً من الرابط ثم من localStorage كاحتياط
-  const urlParams = new URLSearchParams(window.location.search);
-  let marketerId = urlParams.get('marketer_id');
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return false;
+      }
 
-  if (marketerId) {
-    // احفظه بالتخزين المحلي لتبقى القيمة متاحة لاحقاً
-    localStorage.setItem('stored_marketer_id', marketerId);
-  } else {
-    marketerId = localStorage.getItem('stored_marketer_id');
+      const data = await res.json();
+      return Boolean(data.success);
+    } catch (err) {
+      console.error('Network error', err);
+      return false;
+    }
   }
 
-  console.log("📢 current marketerId:", marketerId);
+  function renderDiscountSection() {
+    const container = document.getElementById('discount-container');
+    if (!container) return;
 
-  // العنصر الذي سيُعرض/يُخفي
-  const discountSection = document.getElementById('discount-container');
-  if (!discountSection) {
-    console.warn("⚠️ العنصر #discount-container غير موجود في الصفحة");
-    return;
+    // 💡 نعتمد على المعرّف من getMarketerId
+    const marketerId = getMarketerId();
+    const verified = sessionStorage.getItem(ADMIN_AUTH_KEY) === '1';
+
+    if (marketerId === ADMIN_MARKETER_ID && verified) {
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
+    }
   }
 
-  // شرط الظهور (غيّره إذا تريد أكثر من معرف واحد)
-  if (marketerId === 'TTTTTT11') {
-    discountSection.style.display = 'block';
-  } else {
-    discountSection.style.display = 'none';
+    
+  async function onDiscountSearchClickSecure() {
+    // 💡 نعتمد على المعرّف من getMarketerId
+    const marketerId = getMarketerId();
+    if (!marketerId) {
+      alert('المعرّف غير موجود. الرجاء التأكد من تحميل لوحة التحكم باستخدام رابط الإحالة.');
+      return;
+    }
+
+    if (sessionStorage.getItem(ADMIN_AUTH_KEY) !== '1') {
+      const pwd = prompt('أدخل كلمة المرور للتحقق:');
+      if (!pwd) return;
+
+      const ok = await verifyPasswordPOST(marketerId, pwd);
+      if (!ok) {
+        alert('كلمة المرور خاطئة.');
+        return;
+      }
+
+      sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+      renderDiscountSection();
+      alert('تم التحقق. يمكنك الآن إدخال كود التخفيض.');
+      return;
+    }
+
+    const code = document.getElementById('discount-input').value.trim();
+    if (!code) {
+      alert('أدخل كود التخفيض أولاً.');
+      return;
+    }
+
+    alert('تم إدخال الكود: ' + code);
   }
-});
 
-
-
-
-
-
-
+  document.addEventListener('DOMContentLoaded', () => {
+    // ربط حدث زر التخفيض
+    const btn = document.getElementById('discount-search-btn');
+    if (btn) btn.addEventListener('click', onDiscountSearchClickSecure);
     
-    
+    // تشغيل رندر التخفيض (سيتم تشغيله أيضاً عبر initDashboard)
+    renderDiscountSection();
+  });
 </script>
 
 
+<script>
+
+// ===============================================
+// --- منطق الصفحة الرئيسية (من home-logic.js و unified-stats.js) ---
+// ===============================================
+
+// 🛑 تم تحديث الرابط بناءً على طلبك
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbYeuziWHe6ODINemry6n3XNfXTpDrZ2jxo1GXG9bAjm6AAhiCyogt3p1Y48qvJ1kppQ/exec';
+const BASE_REGISTRATION_URL = 'https://skillia.netlify.app/courses.html';
+const STATS_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWWwBEaENCjKz9wHskpdiZtCu6m__zdMxTzww2bExowoAWdhFAhChEjM7Cb5IOBTFnjA/exec';
+
+// عناصر الـ DOM
+const statusMessage = document.getElementById('statusMessage');
+const dashboardContent = document.getElementById('dashboardContent');
+const marketerIdDisplay = document.getElementById('marketer-id-display');
+const referralsCount = document.getElementById('referrals-count');
+const activeReferralsCount = document.getElementById('active-referrals-count');
+const referralLinkText = document.getElementById('referral-link-text');
+const copyBtn = document.getElementById('copy-btn');
+const downloadBtn = document.getElementById('download-btn');
+const referralsTableContainer = document.getElementById('referrals-table-container');
+const searchInput = document.getElementById('searchInput');
+const toastNotification = document.getElementById('toastNotification');
+const refreshBalanceBtn = document.getElementById('refresh-balance');
+const balanceToast = document.getElementById('toast');
+
+
+let currentReferralsList = [];
+let toastTimeout;
+
+
+// الأعمدة التي نحتاجها لتنزيل CSV
+const referralColumns = ['تاريخ_التسجيل', 'fullname', 'phone', 'email', 'الحالة'];
+const referralHeaders = ['التاريخ', 'اسم المسجّل', 'الهاتف', 'البريد الإلكتروني', 'حالة التسجيل'];
+
+// 🚀 تعريف أسماء الحقول لعرضها داخل البطاقات
+const cardFields = [
+    { key: 'تاريخ_التسجيل', label: 'التاريخ', icon: 'fas fa-calendar-alt' },
+    { key: 'phone', label: 'الهاتف', icon: 'fab fa-whatsapp' },
+    { key: 'email', label: 'البريد', icon: 'fas fa-envelope' },
+];
+
+
+// ----------------------------------------------------
+// --- دوال المساعدة العامة ---
+// ----------------------------------------------------
+
+function updateStatus(message, type = 'loading') {
+    statusMessage.classList.remove('loading', 'success', 'error');
+    statusMessage.classList.add(type);
+    statusMessage.style.display = 'block';
+
+    if (type === 'loading') {
+        statusMessage.innerHTML = `<span class="spinner"></span> ${message}`;
+        dashboardContent.style.display = 'none';
+    } else {
+        statusMessage.innerHTML = message;
+    }
+}
+
+function showToast(message) {
+    toastNotification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    toastNotification.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+        toastNotification.classList.remove('show');
+    }, 2000);
+}
+
+function showBalanceToast(msg, isError=false) {
+  balanceToast.textContent = msg;
+  balanceToast.style.background = isError ? '#d9534f' : '#007b83';
+  balanceToast.classList.add('show');
+  setTimeout(() => balanceToast.classList.remove('show'), 2500);
+}
+
+
+function getStatusHtml(statusValue) {
+    const normalizedValue = String(statusValue).trim().toUpperCase();
+
+    if (normalizedValue === 'Y') {
+        return { name: 'تم الدفع', value: '<span class="card-status status-active">🟢 تم الدفع </span>', class: 'status-Y' };
+    } else if (normalizedValue === 'N') {
+        return { name: 'لم يدفع', value: '<span class="card-status status-inactive">🔴 لم يدفع </span>', class: 'status-N' };
+    }
+    return { name: 'قيد الانتظار', value: '<span class="card-status" style="color: #ffc107;">⛔ قيد الانتظار </span>', class: 'status-pending' };
+}
+
+function updateMetaTags(data) {
+    if (data.personal_data && data.personal_data.length > 0) {
+        const marketerName = data.personal_data[0].fullname || 'غير معروف';
+        const descriptionTag = document.querySelector('meta[property="og:description"]');
+        const titleTag = document.querySelector('meta[property="og:title"]');
+
+        if (titleTag) {
+            titleTag.setAttribute('content', `لوحة تحكم المسوِّق - ${marketerName}`);
+        }
+        if (descriptionTag) {
+            descriptionTag.setAttribute('content', `أهلاً بالمسوِّق ${marketerName}. راجع إحصائيات إحالتك الحالية.`);
+        }
+        document.title = `لوحة تحكم: ${marketerName}`;
+    }
+}
+
+
+// ----------------------------------------------------
+// --- دوال عرض البطاقات والبيانات (referrals) ---
+// ----------------------------------------------------
+
+function buildReferralsCards(referrals) {
+
+    if (!referrals || referrals.length === 0) {
+        const isFiltering = searchInput.value.length > 0;
+        referralsTableContainer.innerHTML = isFiltering
+            ? '<p class="no-data">لم يتم العثور على أي نتائج تطابق البحث.</p>'
+            : '<p class="no-data">لم يسجل أي شخص عبر رابطك بعد.</p>';
+
+        downloadBtn.style.display = 'none';
+        searchInput.disabled = true;
+        return;
+    }
+
+    searchInput.disabled = false;
+    downloadBtn.style.display = 'flex';
+
+    let htmlContent = '';
+
+    referrals.forEach(referral => {
+        const status = getStatusHtml(referral['الحالة']);
+
+        let detailsHtml = cardFields.map(field => {
+            const value = referral[field.key] || '---';
+            const direction = field.key === 'phone' || field.key === 'email' ? 'ltr' : 'rtl';
+
+            return `
+                <p>
+                    <i class="${field.icon}"></i>
+                    <span class="label">${field.label}:</span>
+                    <span class="value" style="direction:${direction};">${value}</span>
+                </p>`;
+        }).join('');
+
+        htmlContent += `
+            <div class="referral-card ${status.class}">
+                <div class="card-header">
+                    <h3 class="card-name">${referral.fullname || 'اسم غير متوفر'}</h3>
+                    ${status.value}
+                </div>
+                <div class="card-details">
+                    ${detailsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    referralsTableContainer.innerHTML = htmlContent;
+}
+
+
+function filterReferrals() {
+    const q = searchInput.value.toLowerCase();
+
+    const filteredList = currentReferralsList.filter(referral => {
+        const fullName = String(referral.fullname || '').toLowerCase();
+        const phone = String(referral.phone || '').toLowerCase();
+        const email = String(referral.email || '').toLowerCase();
+
+        return fullName.includes(q) || phone.includes(q) || email.includes(q);
+    });
+
+    buildReferralsCards(filteredList);
+}
+
+function downloadCSV(data, marketerId) {
+    if (!data || data.length === 0) return;
+    let csv = referralHeaders.join(',') + '\n';
+    data.forEach(row => {
+        let rowData = referralColumns.map(key => {
+            let value = row[key] || '';
+            value = String(value).replace(/"/g, '""');
+            if (value.includes(',')) {
+                value = `"${value}"`;
+            }
+            return value;
+        });
+        csv += rowData.join(',') + '\n';
+    });
+
+    const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    //الحفظ باسم
+    link.setAttribute('download', `${marketerName}_${marketerId}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+
+function displayData(data) {
+    dashboardContent.style.display = 'block';
     
-    <script src="marketer_tracker.js"></script>   
-    <script src="home-logic.js"></script>   
-    <script src="unified-stats.js"></script>
-    <script src="dashboard-unified.js"></script>
-</body>  
+    // تأكد من أن المعرف موجود قبل المتابعة
+    const marketerId = getMarketerId();
+    if (!marketerId) return; // يجب أن يكون قد تم التحقق منه في initDashboard
+
+    const updateTime = new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' });
+    updateStatus(`<i class="fas fa-check-circle"></i> تم التحديث بنجاح ✅ <span style="font-size:14px; margin-right: 15px;">| 📅 آخر تحديث: ${updateTime}</span>`, 'success');
+    setTimeout(() => { statusMessage.style.display = 'none'; dashboardContent.style.display = 'block'; }, 2000);
+
+    currentReferralsList = data.referrals_list || [];
+
+    const activeCount = currentReferralsList.filter(r => String(r['الحالة']).trim().toUpperCase() === 'Y').length;
+    activeReferralsCount.textContent = activeCount;
+
+    updateMetaTags(data);
+
+    // عرض الاسم والمعرف
+    if (data.personal_data && data.personal_data.length > 0) {
+        const marketerName = data.personal_data[0].fullname || 'غير معروف';
+        document.querySelector('header h1').innerHTML = `لوحة تحكم المسوِّق – ${marketerName}`;
+        marketerIdDisplay.innerHTML = `مرحبًا ${marketerName} 👋<br>معرّفك: <span class="id-highlight">${marketerId}</span>`;
+    } else {
+         marketerIdDisplay.innerHTML = `معرّفك: <span class="id-highlight">${marketerId}</span>`;
+    }
+
+    referralsCount.textContent = data.referrals_count || 0;
+    const fullReferralLink = `${BASE_REGISTRATION_URL}?marketer_id=${marketerId}`;
+    referralLinkText.textContent = fullReferralLink;
+
+    // بناء البطاقات
+    buildReferralsCards(currentReferralsList);
+
+    downloadBtn.onclick = () => downloadCSV(currentReferralsList, marketerId);
+}
+
+
+async function fetchData(marketerId) {
+    updateStatus('جارٍ جلب بيانات الإحالات...');
+
+    if (!marketerId || marketerId.length < 3) {
+        updateStatus('⚠️ المعرّف غير صالح. الرجاء التأكد من المعرف المخزن.', 'error');
+        return;
+    }
+
+    const fetchUrl = `${APPS_SCRIPT_URL}?marketerId=${marketerId.toUpperCase()}`;
+
+    try {
+        const response = await fetch(fetchUrl);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            displayData(data);
+        } else {
+            const errorMsg = data.message || 'لم نتمكن من جلب بياناتك. تأكد من صحة المعرف وحالة النشر.';
+            updateStatus(`❌ ${errorMsg}`, 'error');
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        updateStatus('❌ حدث خطأ في الاتصال بالشبكة أو الخادم. الرجاء المحاولة مجدداً.', 'error');
+    }
+}
+
+
+// ----------------------------------------------------
+// --- منطق بطاقة الرصيد والمنافسة (من Balance.html و unified-stats.js) ---
+// ----------------------------------------------------
+
+async function fetchStats(id) {
+  try {
+    const res = await fetch(`${STATS_APP_SCRIPT_URL}?marketer_id=${encodeURIComponent(id)}`);
+    const data = await res.json();
+
+    if (data.success === false || data.error) {
+      const errorMsg = data.message || data.error || 'خطأ غير معروف في الخادم.';
+      showBalanceToast('خطأ من الخادم: ' + errorMsg + ' ❌', true);
+      return null;
+    }
+
+    return data;
+
+  } catch(err) {
+    showBalanceToast('فشل الاتصال: تحقق من اتصالك أو رابط التطبيق ❌', true);
+    console.error('Fetch error:', err);
+    return null;
+  }
+}
+
+
+function updateBalanceUI(stats) {
+  if (!stats) return;
+
+  const commission = Number(stats.total_commission) || 0;
+
+  document.getElementById('current-balance').textContent = commission.toLocaleString('en-US', {minimumFractionDigits:2}) + ' $';
+
+  const totalRegistered = Number(stats.total_registered) || 0;
+  const activeMembers = Number(stats.active) || 0;
+  const inactiveMembers = Number(stats.inactive) || 0;
+
+  document.getElementById('total-members').textContent = totalRegistered;
+  document.getElementById('active-members').textContent = activeMembers;
+  document.getElementById('inactive-members').textContent = inactiveMembers;
+
+  const total = activeMembers + inactiveMembers;
+  const activePercent = total ? (activeMembers/total)*100 : 0;
+  const donut = document.getElementById('statusDonut');
+  donut.style.background = `conic-gradient(#28a745 0% ${activePercent}%, #dc3545 ${activePercent}% 100%)`;
+
+  document.getElementById('current-rank').textContent = stats.rank || 'N/A';
+
+  const top3List = document.getElementById('top3-list');
+  top3List.innerHTML = '';
+  stats.top3.forEach((m) => {
+    const topCommission = Number(m.total) || 0;
+    if (m.name && topCommission > 0) {
+      const li = document.createElement('li');
+      li.textContent = `${m.name} – ${topCommission.toLocaleString('en-US', {minimumFractionDigits:0})}$`;
+      top3List.appendChild(li);
+    }
+  });
+
+  // تخزين الأرقام الثابتة فقط (منطق unified-stats.js)
+  const fixedStats = {
+    total_registered: totalRegistered,
+    active: activeMembers,
+    inactive: inactiveMembers,
+    top3: stats.top3
+  };
+  localStorage.setItem('dashboardStats', JSON.stringify(fixedStats));
+}
+
+function loadDashboardFromStorage() {
+  const fixedStats = JSON.parse(localStorage.getItem('dashboardStats'));
+  if(fixedStats) {
+    document.getElementById('total-members').textContent = fixedStats.total_registered;
+    document.getElementById('active-members').textContent = fixedStats.active;
+    document.getElementById('inactive-members').textContent = fixedStats.inactive;
+
+    const total = fixedStats.total_registered;
+    const activeMembers = fixedStats.active;
+    const activePercent = total ? (activeMembers/total)*100 : 0;
+    const donut = document.getElementById('statusDonut');
+    donut.style.background = `conic-gradient(#28a745 0% ${activePercent}%, #dc3545 ${activePercent}% 100%)`;
+
+
+    const top3List = document.getElementById('top3-list');
+    top3List.innerHTML = '';
+    fixedStats.top3.forEach((m) => {
+      const li = document.createElement('li');
+      const topCommission = Number(m.total) || 0;
+      li.textContent = `${m.name} – ${topCommission.toLocaleString('en-US', {minimumFractionDigits:0})}$`;
+      top3List.appendChild(li);
+    });
+  }
+}
+
+async function initBalanceDisplay() {
+    
+  const marketerId = getMarketerId();
+    
+  if (!marketerId) {
+    const balanceElement = document.getElementById('current-balance');
+    balanceElement.textContent = '⚠️ المعرف مفقود';
+    balanceElement.style.fontSize = '1.8rem';
+
+    document.getElementById('total-members').textContent = '0';
+    document.getElementById('active-members').textContent = '0';
+    document.getElementById('inactive-members').textContent = '0';
+    document.getElementById('current-rank').textContent = 'غير محدد';
+    document.getElementById('top3-list').innerHTML = '<li>--</li><li>--</li><li>--</li>';
+    showBalanceToast('خطأ: المعرف غير متوفر في الذاكرة ❌', true);
+    return;
+  }
+
+  loadDashboardFromStorage();
+
+
+  document.getElementById('current-balance').innerHTML = '<div class="loader"></div>';
+  document.getElementById('current-balance').style.fontSize = '2.8rem';
+
+  const stats = await fetchStats(marketerId);
+  updateBalanceUI(stats);
+  if (stats) showBalanceToast('تم تحديث بيانات الرصيد بنجاح ✅');
+}
+
+
+// ----------------------------------------------------
+// --- تنفيذ الكود والـ Event Listeners (تحديث) ---
+// ----------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    window.filterReferrals = filterReferrals;
+    window.downloadCSV = downloadCSV;
+
+    copyBtn.addEventListener('click', async () => {
+        const link = referralLinkText.textContent;
+        try {
+            await navigator.clipboard.writeText(link);
+            showToast('تم نسخ الرابط إلى الحافظة!');
+        } catch (err) {
+            console.error('فشل النسخ:', err);
+            showToast('❌ فشل النسخ، الرجاء المحاولة مجدداً.');
+        }
+    });
+
+    if (refreshBalanceBtn) {
+        refreshBalanceBtn.addEventListener('click', initBalanceDisplay);
+    }
+    
+    // تم إلغاء ربط زر "عرض البيانات" وحذف المنطق المتعلق به
+});
+
+
+</script>
+</body>
 </html>
