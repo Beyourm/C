@@ -14,10 +14,144 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../assets/fonts/tajawal.css">
-
-    <link rel="stylesheet" href="table-styles.css">
+    <link rel="stylesheet" href="../assets/fonts/cairo.css"> <link rel="stylesheet" href="table-styles.css">
     <link rel="stylesheet" href="style.css">
 
+
+<style>
+/* ===============================
+   ستايلات الدورات (Dialog Content Styles)
+   تم نقلها من ملف dialog.html
+   =============================== */
+  #courses-dialog .dialog-content-wrapper {
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 10px;
+  }
+
+  /* تم إزالة .dialog-overlay بالكامل */
+  
+  .dialog-box {
+    /* تم تعديل هذا الصندوق ليكون بمثابة محتوى الـ dialog */
+    background: #fff;
+    border-radius: 10px; 
+    padding: 15px;
+    box-shadow: none;
+    text-align: right;
+  }
+
+  .dialog-header-courses {
+    font-size: 18px; 
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    margin-bottom: 10px; 
+  }
+
+  .toggle-btn-courses {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .toggle-btn-courses:hover {
+    background: #1d4ed8;
+    transform: scale(1.03);
+  }
+
+  .arrow-courses {
+    transition: transform 0.3s ease;
+  }
+
+  .arrow-courses.rotate {
+    transform: rotate(180deg);
+  }
+
+  .course-list {
+    margin-top: 15px;
+    display: none; 
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    max-height: 400px; /* لتقييد الارتفاع داخل الدايلوج */
+    overflow-y: auto;   
+    padding-right: 5px; 
+  }
+
+  .course-item {
+    background: #f9fafb;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+  }
+
+  .course-item:hover {
+    background: #e0e7ff;
+    color: #1e40af;
+  }
+
+  .message-courses {
+    text-align: center;
+    margin-top: 12px;
+    color: #16a34a;
+    font-weight: 600;
+    display: none;
+    padding: 10px;
+    border: 1px solid #c8e6c9;
+    background: #f1fff1;
+    border-radius: 8px;
+  }
+
+  .levies-text-red {
+    color: #ef4444; 
+    font-weight: 700;
+    font-size: 15px;
+    background: #fee2e2; 
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  /* ستايل إغلاق الدايلوج */
+  #courses-dialog .close-btn { 
+    padding: 10px 20px; 
+    background-color: #007b83; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  /* ستايلات الدايلوج الأساسية */
+  dialog {
+      border: none;
+      border-radius: 12px;
+      padding: 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      background-color: transparent;
+  }
+  dialog::backdrop {
+      background: rgba(0, 0, 0, 0.6);
+  }
+</style>
 
 </head>
 <body>
@@ -136,10 +270,22 @@
     <div id="toast" class="toast">تم تحديث البيانات بنجاح ✅</div>
 
 
-        <dialog id="courses-dialog">
+    <dialog id="courses-dialog">
         <div class="dialog-content-wrapper">
-            <iframe src="dialog.html"></iframe>
-            <form method="dialog">
+
+             <div class="dialog-box">
+                <div class="dialog-header-courses" id="dialogHeaderCourses">🎓اختر الدورة المراد التسوق لها </div>
+                <button class="toggle-btn-courses" id="toggleButtonCourses">
+                    عرض الدورات <span class="arrow-courses" id="arrowCourses">🔻</span>
+                </button>
+
+                <div class="course-list" id="courseList">
+                    </div>
+
+                <div class="message-courses" id="messageCourses">تم نسخ الرابط ✅</div>
+            </div>
+
+            <form method="dialog" style="text-align: center; margin-top: 10px;">
                 <button class="close-btn">إغلاق</button>
             </form>
         </div>
@@ -153,6 +299,8 @@
 
             if (showCoursesBtn && coursesDialog) {
                 showCoursesBtn.addEventListener('click', function() {
+                    // 💡 هنا يتم تهيئة الدايلوج قبل عرضه
+                    initializeDialog(); 
                     coursesDialog.showModal();
                 });
             }
@@ -169,6 +317,10 @@
 
 <style>
 
+/* ===============================
+   CSS مخصص لبطاقة الرصيد والمنافسة المدمجة (Balance.html)
+   (محتفظ بها كما هي من الكود السابق)
+   =============================== */
 .footer {
     background-color: #0d3b14;
     color: #ffffff;
@@ -220,9 +372,6 @@ body {
 }
 
 
-/* ===============================
-   CSS مخصص لبطاقة الرصيد والمنافسة المدمجة (Balance.html)
-   =============================== */
 :root {
   --primary-color: #007b83; /* لون أساسي جديد */
   --accent-color: #f0f4f8; /* لون ثانوي */
@@ -242,8 +391,8 @@ body {
   padding: 25px 30px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   text-align: center;
-  width: 100%; /* اجعل العرض 100% ليناسب الحاوية */
-  max-width: 420px; /* تحديد أقصى عرض كما كان في الإطار */
+  width: 100%;
+  max-width: 420px;
   transition: all 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -365,6 +514,7 @@ animation: heartbeat 1.5s infinite;
 </style>
 
 <script>
+
   const DEVICE_SERIAL_KEY = 'marketer_device_serial';
   const MARKETER_SESSION_KEY = 'marketer_session_data';
   const OTP_PENDING_KEY = 'otp_pending_login';
@@ -379,6 +529,17 @@ animation: heartbeat 1.5s infinite;
       // 🚨 مصدر المعرّف الوحيد هو localStorage
       return localStorage.getItem(LOCAL_MARKETER_KEY);
   }
+  
+  // 💡 دالة للحصول على المعرف من localStorage أو رابط URL الحالي
+  function getMarketerIdForDialog() {
+       const storedId = getMarketerId();
+       if (storedId) return storedId;
+
+       // محاولة استخلاص من رابط URL الحالي للصفحة في حال عدم وجوده في localStorage
+       const urlParams = new URLSearchParams(window.location.search);
+       return urlParams.get('marketer_id') || urlParams.get('id') || 'TTTTTT11';
+  }
+
 
   function initDashboard() {
       const marketerId = getMarketerId();
@@ -558,7 +719,7 @@ const balanceToast = document.getElementById('toast');
 
 let currentReferralsList = [];
 let toastTimeout;
-// 💡 التعديل هنا: تعريف متغير عام للاسم لحل مشكلة التنزيل
+// 💡 تعريف متغير عام للاسم لحل مشكلة التنزيل
 let marketerName = 'Marketer'; 
 
 
@@ -723,7 +884,7 @@ function downloadCSV(data, marketerId) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    // 💡 تم استخدام المتغير العام marketerName هنا
+    // 💡 استخدام المتغير العام marketerName
     link.setAttribute('download', `${marketerName}_${marketerId}.csv`); 
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
@@ -753,7 +914,7 @@ function displayData(data) {
 
     // عرض الاسم والمعرف
     if (data.personal_data && data.personal_data.length > 0) {
-        // 💡 تم تحديث المتغير العام marketerName هنا
+        // 💡 تحديث المتغير العام marketerName
         marketerName = data.personal_data[0].fullname || 'غير معروف'; 
         document.querySelector('header h1').innerHTML = `لوحة تحكم المسوِّق – ${marketerName}`;
         marketerIdDisplay.innerHTML = `مرحبًا ${marketerName} 👋<br>معرّفك: <span class="id-highlight">${marketerId}</span>`;
@@ -853,7 +1014,8 @@ function updateBalanceUI(stats) {
     const topCommission = Number(m.total) || 0;
     if (m.name && topCommission > 0) {
       const li = document.createElement('li');
-      li.textContent = `${m.name} – ${topCommission.toLocaleString('en-US', {minimumFractionDigits:0})}$`;
+      const topCommissionText = topCommission.toLocaleString('en-US', {minimumFractionDigits:0});
+      li.textContent = `${m.name} – ${topCommissionText}$`;
       top3List.appendChild(li);
     }
   });
@@ -923,6 +1085,130 @@ async function initBalanceDisplay() {
 }
 
 
+// ===============================================
+// --- منطق الدورات (من dialog.html المدمج) ---
+// ===============================================
+
+// ⛔⛔⛔ هام: تم تحديث هذا بالرابط الجديد من ملف dialog.html ⛔⛔⛔
+const COURSE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvaDty4OhXdnR3poYEuwj9W53esn2923XYpKZc7LTKf_M17Z576YGP_EkjB9bt-hN8pA/exec";
+
+let COURSES = []; 
+let dialogMarketerId = ''; // سيتم تعيينه عند فتح الدايلوج
+
+/**
+ * دالة لجلب الدورات من Google Sheets API
+ */
+async function fetchCourses() {
+    const listContainer = document.getElementById('courseList');
+    listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:#555;">جارٍ تحميل الدورات...</div>';
+    
+    try {
+        const response = await fetch(COURSE_APP_SCRIPT_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        if (data && data.courses && Array.isArray(data.courses)) {
+            COURSES = data.courses; 
+            renderCourseList(); 
+        } else {
+            throw new Error("تنسيق بيانات غير صالح من الخادم.");
+        }
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:#ef4444;">❌ فشل تحميل الدورات. تحقق من رابط Apps Script.</div>';
+    }
+}
+
+
+/**
+ * بناء وإضافة عناصر الدورات إلى قائمة القائمة
+ */
+function renderCourseList() {
+    const listContainer = document.getElementById('courseList');
+    listContainer.innerHTML = ''; 
+
+    if (COURSES.length === 0) {
+         listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:#555;">لا توجد دورات متاحة حالياً.</div>';
+         return;
+    }
+
+    COURSES.forEach(course => {
+        const item = document.createElement('div');
+        item.className = 'course-item';
+        
+        item.innerHTML = `
+          <span>${course.name}</span>
+          <span class="levies-text-red">الرسوم: ${course.levies} $</span>
+        `;
+        
+        // ربط حدث الضغط بالدالة copyLink
+        item.addEventListener('click', () => copyLink(course.slug));
+        listContainer.appendChild(item);
+    });
+}
+
+/**
+ * تبديل حالة عرض وإخفاء قائمة الدورات
+ */
+function toggleList() {
+    const list = document.getElementById('courseList');
+    const arrow = document.getElementById('arrowCourses');
+    const isVisible = list.style.display === 'block';
+    
+    list.style.display = isVisible ? 'none' : 'block';
+    arrow.classList.toggle('rotate');
+
+    if (!isVisible && COURSES.length === 0) {
+        // إذا لم تكن القائمة مرئية والدورات لم يتم جلبها بعد، فقم بجلبها
+        fetchCourses();
+    }
+}
+
+
+/**
+ * الدالة المعدلة لنسخ الرابط مع إضافة معرّف المسوِّق
+ */
+function copyLink(courseSlug) {
+    const baseUrl = "https://skillia.netlify.app/course.html"; 
+    // 💡 استخدام dialogMarketerId المُخزّن عند فتح الدايلوج
+    let fullLink = baseUrl + "?id=" + courseSlug;
+    fullLink += "&marketer_id=" + dialogMarketerId;
+    
+    navigator.clipboard.writeText(fullLink).then(() => {
+        const msg = document.getElementById('messageCourses');
+        msg.style.display = 'block';
+        msg.innerHTML = `تم نسخ رابط الدورة <span style="font-weight: bold; color: #1d4ed8;">${courseSlug.toUpperCase()}</span> بنجاح!<br> تم إضافة كودك: <span style="font-weight: bold;">${dialogMarketerId}</span> ✅`;
+        setTimeout(() => msg.style.display = 'none', 3000);
+    });
+}
+
+
+/**
+ * دالة التهيئة الرئيسية للدايلوج
+ */
+function initializeDialog() {
+    // 1. استخلاص كود المسوِّق مرة واحدة عند فتح الدايلوج
+    dialogMarketerId = getMarketerIdForDialog();
+    
+    // 2. تحديث رأس الدايلوج لعرض كود المسوِّق
+    const header = document.getElementById('dialogHeaderCourses');
+    header.innerHTML = `🎓اختر الدورة المراد التسوق لها (كودك: <span style="color:#2563eb;">${dialogMarketerId}</span>)`;
+    
+    // 3. ربط زر التبديل (تم تغيير اسم الـ ID ليناسب الدمج)
+    const toggleBtn = document.getElementById('toggleButtonCourses');
+    // إزالة أي حدث سابق قبل الربط لتجنب التكرار
+    toggleBtn.removeEventListener('click', toggleList);
+    toggleBtn.addEventListener('click', toggleList);
+    
+    // 4. إغلاق القائمة افتراضياً عند كل فتح جديد
+    const list = document.getElementById('courseList');
+    const arrow = document.getElementById('arrowCourses');
+    list.style.display = 'none';
+    arrow.classList.remove('rotate');
+}
+
 // ----------------------------------------------------
 // --- تنفيذ الكود والـ Event Listeners (تحديث) ---
 // ----------------------------------------------------
@@ -946,11 +1232,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (refreshBalanceBtn) {
         refreshBalanceBtn.addEventListener('click', initBalanceDisplay);
     }
-    
-    // تم إلغاء ربط زر "عرض البيانات" وحذف المنطق المتعلق به
 });
 
 
 </script>
 </body>
 </html>
+
+
