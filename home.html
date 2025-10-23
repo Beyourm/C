@@ -358,6 +358,8 @@ body {
 .top3 li { margin-bottom: 5px; font-weight: bold; }
 .top3 li:nth-child(1) { color: #FFD700; }
 .top3 li:nth-child(2) { color: #C0C0C0; }
+animation: heartbeat 1.5s infinite;
+
 .top3 li:nth-child(3) { color: #cd7f32; }
 
 </style>
@@ -374,7 +376,7 @@ body {
   // ** الدوال الأساسية لجلب المعرّف وتشغيل لوحة التحكم **
   // ------------------------------------------------------------------
   function getMarketerId() {
-      // 🚨 الآن، مصدر المعرّف الوحيد هو localStorage
+      // 🚨 مصدر المعرّف الوحيد هو localStorage
       return localStorage.getItem(LOCAL_MARKETER_KEY);
   }
 
@@ -383,7 +385,6 @@ body {
       
       if (marketerId) {
           console.log("Marketer ID loaded from storage:", marketerId);
-          // لا حاجة للتخزين هنا، فهو موجود بالفعل
           fetchData(marketerId);
           initBalanceDisplay();
           renderDiscountSection(); 
@@ -557,6 +558,8 @@ const balanceToast = document.getElementById('toast');
 
 let currentReferralsList = [];
 let toastTimeout;
+// 💡 التعديل هنا: تعريف متغير عام للاسم لحل مشكلة التنزيل
+let marketerName = 'Marketer'; 
 
 
 // الأعمدة التي نحتاجها لتنزيل CSV
@@ -618,17 +621,17 @@ function getStatusHtml(statusValue) {
 
 function updateMetaTags(data) {
     if (data.personal_data && data.personal_data.length > 0) {
-        const marketerName = data.personal_data[0].fullname || 'غير معروف';
+        const marketerNameLocal = data.personal_data[0].fullname || 'غير معروف';
         const descriptionTag = document.querySelector('meta[property="og:description"]');
         const titleTag = document.querySelector('meta[property="og:title"]');
 
         if (titleTag) {
-            titleTag.setAttribute('content', `لوحة تحكم المسوِّق - ${marketerName}`);
+            titleTag.setAttribute('content', `لوحة تحكم المسوِّق - ${marketerNameLocal}`);
         }
         if (descriptionTag) {
-            descriptionTag.setAttribute('content', `أهلاً بالمسوِّق ${marketerName}. راجع إحصائيات إحالتك الحالية.`);
+            descriptionTag.setAttribute('content', `أهلاً بالمسوِّق ${marketerNameLocal}. راجع إحصائيات إحالتك الحالية.`);
         }
-        document.title = `لوحة تحكم: ${marketerName}`;
+        document.title = `لوحة تحكم: ${marketerNameLocal}`;
     }
 }
 
@@ -720,8 +723,8 @@ function downloadCSV(data, marketerId) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    //الحفظ باسم
-    link.setAttribute('download', `${marketerName}_${marketerId}.csv`);
+    // 💡 تم استخدام المتغير العام marketerName هنا
+    link.setAttribute('download', `${marketerName}_${marketerId}.csv`); 
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -750,11 +753,13 @@ function displayData(data) {
 
     // عرض الاسم والمعرف
     if (data.personal_data && data.personal_data.length > 0) {
-        const marketerName = data.personal_data[0].fullname || 'غير معروف';
+        // 💡 تم تحديث المتغير العام marketerName هنا
+        marketerName = data.personal_data[0].fullname || 'غير معروف'; 
         document.querySelector('header h1').innerHTML = `لوحة تحكم المسوِّق – ${marketerName}`;
         marketerIdDisplay.innerHTML = `مرحبًا ${marketerName} 👋<br>معرّفك: <span class="id-highlight">${marketerId}</span>`;
     } else {
          marketerIdDisplay.innerHTML = `معرّفك: <span class="id-highlight">${marketerId}</span>`;
+         marketerName = 'Marketer'; // في حالة عدم وجود بيانات شخصية
     }
 
     referralsCount.textContent = data.referrals_count || 0;
